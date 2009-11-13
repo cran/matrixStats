@@ -1,6 +1,6 @@
 Package: matrixStats
-Version: 0.1.6
-Date: 2009-06-17
+Version: 0.1.8
+Date: 2009-11-13
 Title: Methods that apply to rows and columns of a matrix
 Author: Henrik Bengtsson <henrikb@braju.com> (partly by Robert
         Gentleman)
@@ -14,6 +14,6 @@ Description: This packages provides methods operating on rows and
 License: Artistic-2.0
 LazyLoad: TRUE
 biocViews: Infrastructure, Statistics
-Packaged: 2009-06-18 04:02:59 UTC; hb
+Packaged: 2009-11-13 07:35:08 UTC; hb
 Repository: CRAN
-Date/Publication: 2009-06-18 07:28:59
+Date/Publication: 2009-11-13 13:35:21
