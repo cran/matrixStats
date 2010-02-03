@@ -1,13 +1,19 @@
 Package: matrixStats
 ====================
 
+Version: 0.1.9 [2010-02-03]
+o BUG FIX: (col|row)WeightedMeans(..., na.rm=TRUE) would incorrectly 
+  treat missing values as zeros.  Added corresponding redundancy tests
+  (also for the median case).  Thanks Pierre Neuvial for reporting this.
+
+
 Version: 0.1.8 [2009-11-13]
 o BUG FIX: colRanges(x) would return a matrix of wrong dimension
   if 'x' did not have any missing values.  This would affect all
   functions relying on colRanges(), e.g. colMins() and colMaxs().
   Added a redundancy test for this case.  Thanks Pierre Neuvial
   at UC Berkeley for reporting this.
-o BUG FIX: {col|row}Ranges() returne a matrix with dimension names.
+o BUG FIX: {col|row}Ranges() return a matrix with dimension names.
 
 
 Version: 0.1.7 [2009-06-20]
