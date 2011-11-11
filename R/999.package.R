@@ -3,7 +3,8 @@
 #
 # \description{
 #   @eval "packageDescription('matrixStats')$Description".
-#   Please consider this package to be in a beta phase.
+#   This package went public (on CRAN) in June 2009.  
+#   It is currently in a beta version where new methods are added.
 # }
 #
 # \section{Installation}{
@@ -15,20 +16,6 @@
 #
 # \section{Dependancies and other requirements}{
 #   See DESCRIPTION file for now.
-# }
-#
-# \section{Roadmap}{
-#   The plan is to publish this package on CRAN when the API is 
-#   settled/stable.  Currently, we are in a stage of adding new methods
-#   to the package.  It is currently not decided whether the methods
-#   should be S4 or S3 methods.  What is sure is that we will use
-#   either dispatching mechanisms.
-#   This is the reason why some methods are based on S4 and some on S3.
-#   The ones using S3 rely on the \pkg{R.methodsS3} package to define the
-#   methods.  There are also dependancies on other packages.  The plan
-#   is to remove all such dependancies as soon as the API settles, but
-#   until then, we keep the dependancies for conveniency and in order to
-#   avoid reduncancy of available implementations of identical methods.
 # }
 #
 # \section{To get started}{
@@ -58,6 +45,7 @@
 #    \item rowIQRs()
 #    \item rowQuantiles()
 #    \item rowOrderStats()
+#    \item rowRanks()
 #    \item rowRanges()
 #    \item rowMins()
 #    \item rowMaxs()
@@ -69,15 +57,29 @@
 #  }
 # }
 #
+# \section{How to contribute}{
+#   This is an open-source project which embraces collaborations.
+#   If you have improvements on code and/or documentation, or
+#   new function, please consider contributing them to this package.
+# }
+#
+# \section{For developers}{
+#   It is currently not decided whether the methods should be S4 or S3
+#   methods.  
+#   This is the reason why some methods are based on S4 and some on S3.
+#   The ones using S3 rely on the \pkg{R.methodsS3} package to define the
+#   methods.
+#   There are also dependancies on other packages.  The plan
+#   is to remove all such dependancies as soon as the API settles, but
+#   until then, we keep the dependancies for conveniency and in order to
+#   avoid reduncancy of available implementations of identical methods.
+# }
+#
 # \section{How to cite this package}{
-#  \preformatted{
 #   @eval "x <- citation('matrixStats'); format(x, 'textVersion')"
-#  }
 # }
 #
 # \author{
-#   @get "author"
-#   The native implementation of \code{rowOrderStats()} was adopted from
-#   Robert Gentleman's @see "Biobase::rowQ" in the \pkg{Biobase} package.
+#   @eval "packageDescription('matrixStats')$Author".
 # }
 #*/#########################################################################  

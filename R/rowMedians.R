@@ -36,7 +36,9 @@
 #   (\code{colMedians(x)}), but all this is avoided.
 # }
 #
-# @author
+# \author{
+#   Henrik Bengtsson and Harris Jaffee.
+# }
 #
 # \seealso{
 #   See @see "rowMedians" and \code{colMedians()} for weighted medians.
@@ -49,7 +51,7 @@
 # @keyword univar
 #*/########################################################################### 
 setGeneric("rowMedians", function(x, na.rm=FALSE, ...) {
-  standardGeneric("rowMedians")
+  standardGeneric("rowMedians");
 })
 
 setMethod("rowMedians", signature(x="matrix"), function(x, na.rm=FALSE, ...) {
@@ -60,7 +62,7 @@ setMethod("rowMedians", signature(x="matrix"), function(x, na.rm=FALSE, ...) {
 
 
 setGeneric("colMedians", function(x, na.rm=FALSE, ...) {
-  standardGeneric("colMedians")
+  standardGeneric("colMedians");
 })
 
 setMethod("colMedians", signature(x="matrix"), function(x, na.rm=FALSE, ...) {
