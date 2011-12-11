@@ -1,8 +1,6 @@
 ###########################################################################/**
 # @RdocFunction rowQuantiles
 # @alias colQuantiles
-# @alias rowIQRs
-# @alias colIQRs
 #
 # @title "Estimates quantiles for each row (column) in a matrix"
 #
@@ -24,8 +22,10 @@
 # }
 #
 # \value{
-#   Returns a @numeric NxJ (JxK) @matrix.
+#   Returns a @numeric JxN (JxK) @matrix.
 # }
+#
+# @examples "../incl/rowQuantiles.Rex"
 #
 # @author
 #
@@ -56,7 +56,7 @@ rowQuantiles <- function(x, probs=seq(from=0, to=1, by=0.25), ..., drop=TRUE) {
       }
     }
   } else {
-    # Set the column names in case there are now rows
+    # Set the column names in case there are no rows
     t <- quantile(0.0, probs=probs, ...);
     colnames(q) <- names(t);
   }
@@ -77,6 +77,8 @@ colQuantiles <- function(x, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-29 [HB] 
+# o Added an Rdoc example.
 # 2010-10-06 [HB] 
 # o Now the result of {row|col}Quantiles() contains column names.
 # 2008-03-26 [HB] 
