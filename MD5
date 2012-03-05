@@ -1,4 +1,4 @@
-2916c1e06f1084b1644e524740ccbb3e *DESCRIPTION
+bd2384b4f3c291cd891d4b86b6789541 *DESCRIPTION
 0d36a5b4db6858ebd12541b0b263f651 *NAMESPACE
 42dbc48c7e4383610810477bc5ad7d85 *R/000.R
 4f044ccaecdfb6c84eab0e2a60539686 *R/999.package.R
@@ -10,7 +10,7 @@ d21dd632461fedeb2c83c9309b66cd15 *R/rowCollapse.R
 92e599b03a047275f160e2277cd3bea6 *R/rowCounts.R
 806ddb4e9cf7e2709e0692b8b57bccd1 *R/rowDiffs.R
 fb64e25c32bd681e2e828ed8e591b7e9 *R/rowIQRs.R
-6efb12e89eb38ae3a5296fd6ac41a2c6 *R/rowMads.R
+605fc7b8f93c1e715cd711bfdf9c85f0 *R/rowMads.R
 b43fb0b836ab5af78a3878f4e1fac513 *R/rowMedians.R
 fd0236690a8046147fdbf8a936b965a5 *R/rowOrderStats.R
 f67c12b4bfb64f2f5347ac6bbb9d96d6 *R/rowProds.R
@@ -34,7 +34,7 @@ cde2be96addaec1fdd067cae34c2b3a6 *incl/rowCounts.Rex
 dbe8c2a7648def71e5090038c10ec8d5 *incl/rowTabulates.Rex
 8274191ee04c00b446a100aaf7e043f3 *incl/rowWeightedMeans.Rex
 a7c6530c52ba9bbdc670c1f4658c629c *incl/rowWeightedMedians.Rex
-866351bfa3c981d4a929e78170c0e774 *inst/NEWS
+c234d90ae955f4b260b8b38ed5c83aeb *inst/NEWS
 7a4b3113c7876cc06d2c4e7563df77f4 *man/anyMissing.Rd
 b217268977b16d4da3b6fd0e49b1607e *man/indexByRow.Rd
 d25d951a65979e229b50d73b09a1c04c *man/matrixStats-package.Rd
@@ -55,14 +55,15 @@ d72630671312cc1e9083821515dbf377 *man/rowSds.Rd
 7a6aac9db55c1e05d4005b625da19b43 *man/rowWeightedMeans.matrix.Rd
 2568b3778600f9c7c1a64bd8902d23a7 *man/rowWeightedMedians.matrix.Rd
 e73581199a54c3d1c2a48983881851b9 *man/varDiff.Rd
-9e571d07670efb9ef59a75d769d38254 *src/anyMissing.c
+c67a10d76b669d76bc9acb2232563f4f *src/anyMissing.c
 0b958a697564105c59ecbc10b94304b7 *src/rowMedians.c
 f24228290409212e7d92be24827fa68b *src/rowOrderStats.c
 b342149ebe42d343f79ea25bdef364d3 *src/rowRanks.c
 7e80a238035844649bd095826daaad3c *tests/rowCounts.R
-96fe477602240e8f0a620c0578e30572 *tests/rowMedians.R
+3b528337d37284206ea020dec022d2ae *tests/rowMads.R
+63378f2c4c5f52db06e78029e75047d5 *tests/rowMedians.R
 deb7ac7680506815725b2aec2047c09c *tests/rowOrderStats.R
-c43ef9885d9dbce0c35a56da9dc82d15 *tests/rowRanges.R
-e6abfb1a64ee278818d2a26fe8521459 *tests/rowRanks.R
+77df3df96e5d136138cb4dd3cb37049f *tests/rowRanges.R
+2d9bc3aca7d6f880277dfac31889c523 *tests/rowRanks.R
 3f00a1efb79db46ba7606c1deeb4a4a4 *tests/rowWeightedMeans.R
 ce0f9b7d7620523580944bf36878798c *tests/rowWeightedMedians.R
