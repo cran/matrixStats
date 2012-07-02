@@ -1,11 +1,10 @@
 /***************************************************************************
  Public methods:
  SEXP rowMedians(SEXP x, SEXP naRm, SEXP hasNA)
- SEXP colMedians(SEXP x, SEXP naRm, SEXP hasNA)
 
  Private methods:
- SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_column)
- SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna, int by_column)
+ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna)
+ SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna)
 
  Authors: Adopted from rowQuantiles.c by R. Gentleman.
 
@@ -19,7 +18,7 @@
 
 
 
-SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_column) {
+SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna) {
   SEXP ans;
   int isOdd;
   int ii, jj, kk, qq;
@@ -54,16 +53,8 @@ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_colu
 
   /* Pre-calculate the column offsets */
   colOffset = (int *) R_alloc(ncol, sizeof(int));
-
-  //HJ begin
-  if (by_column) {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = jj;
-  } else {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = (int)jj*nrow;
-  }
-  //HJ end
+  for(jj=0; jj < ncol; jj++) 
+    colOffset[jj] = (int)jj*nrow;
 
   if (hasna == TRUE) {
     for(ii=0; ii < nrow; ii++) {
@@ -72,13 +63,11 @@ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_colu
 
       // Rprintf("ii=%d\n", ii);
 
-      int rowIdx = by_column ? ncol*ii : ii; //HJ
-
       kk = 0;  /* The index of the last non-NA value detected */
       for(jj=0; jj < ncol; jj++) {
-        value = xx[rowIdx+colOffset[jj]];  //HJ
+        value = xx[ii+colOffset[jj]];
 
-        if (ISNAN(value)) {
+        if (ISNA(value)) {
           if (narm == FALSE) {
             kk = -1;
             break;
@@ -110,7 +99,7 @@ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_colu
         if (isOdd == TRUE) {
           REAL(ans)[ii] = value;
         } else {
-          if (narm == TRUE || !ISNAN(value)) {
+          if (narm == TRUE || !ISNA(value)) {
             /* Permute x[0:qq-2] so that x[qq-1] is in the correct 
                place with smaller values to the left, ... */
             rPsort(rowData, qq+1, qq);
@@ -127,10 +116,8 @@ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_colu
       if(ii % 1000 == 0)
         R_CheckUserInterrupt(); 
 
-      int rowIdx = by_column ? ncol*ii : ii; //HJ
-
       for(jj=0; jj < ncol; jj++)
-        rowData[jj] = xx[rowIdx+colOffset[jj]]; //HJ
+        rowData[jj] = xx[ii+colOffset[jj]];
   
       /* Permute x[0:ncol-1] so that x[qq] is in the correct 
          place with smaller values to the left, ... */
@@ -158,7 +145,7 @@ SEXP rowMediansReal(SEXP x, int nrow, int ncol, int narm, int hasna, int by_colu
 
 
 
-SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna, int by_column) {
+SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna) {
   SEXP ans;
   int isOdd;
   int ii, jj, kk, qq;
@@ -192,28 +179,17 @@ SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna, int by_c
 
   /* Pre-calculate the column offsets */
   colOffset = (int *) R_alloc(ncol, sizeof(int));
-
-  // HJ begin
-  if (by_column) {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = jj;
-  } else {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = (int)jj*nrow;
-  }
-  // HJ end
+  for(jj=0; jj < ncol; jj++) 
+    colOffset[jj] = (int)jj*nrow;
 
   if (hasna == TRUE) {
     for(ii=0; ii < nrow; ii++) {
       if(ii % 1000 == 0)
         R_CheckUserInterrupt(); 
 
-      int rowIdx = by_column ? ncol*ii : ii; //HJ
-
       kk = 0;  /* The index of the last non-NA value detected */
       for(jj=0; jj < ncol; jj++) {
-        value = xx[rowIdx+colOffset[jj]]; //HJ
-
+        value = xx[ii+colOffset[jj]];
         if (value == NA_INTEGER) {
           if (narm == FALSE) {
             kk = -1;
@@ -263,10 +239,8 @@ SEXP rowMediansInteger(SEXP x, int nrow, int ncol, int narm, int hasna, int by_c
       if(ii % 1000 == 0)
         R_CheckUserInterrupt(); 
 
-      int rowIdx = by_column ? ncol*ii : ii; //HJ
-
       for(jj=0; jj < ncol; jj++)
-        rowData[jj] = xx[rowIdx+colOffset[jj]]; //HJ
+        rowData[jj] = xx[ii+colOffset[jj]]; 
   
       /* Permute x[0:ncol-1] so that x[qq] is in the correct 
          place with smaller values to the left, ... */
@@ -293,7 +267,6 @@ SEXP rowMedians(SEXP x, SEXP naRm, SEXP hasNA) {
   int nrow, ncol;
   int narm;
   int hasna;
-  int by_column = 0;
 
   /* Argument 'x': */
   if (!isMatrix(x))
@@ -319,9 +292,9 @@ SEXP rowMedians(SEXP x, SEXP naRm, SEXP hasNA) {
 
   /* Double matrices are more common to use. */
   if (isReal(x)) {
-    ans = rowMediansReal(x, nrow, ncol, narm, hasna, by_column);
+    ans = rowMediansReal(x, nrow, ncol, narm, hasna);
   } else if (isInteger(x)) {
-    ans = rowMediansInteger(x, nrow, ncol, narm, hasna, by_column);
+    ans = rowMediansInteger(x, nrow, ncol, narm, hasna);
   } else {
     UNPROTECT(1);
     error("Argument 'x' must be a numeric.");
@@ -332,61 +305,9 @@ SEXP rowMedians(SEXP x, SEXP naRm, SEXP hasNA) {
   return(ans);
 } /* rowMedians() */
 
-//HJ begin
-SEXP colMedians(SEXP x, SEXP naRm, SEXP hasNA) {
-  SEXP ans;
-  int nrow, ncol;
-  int narm;
-  int hasna;
-  int by_column = 1;
-
-  /* Argument 'x': */
-  if (!isMatrix(x))
-    error("Argument 'x' must be a matrix.");
-
-  /* Argument 'naRm': */
-  if (!isLogical(naRm))
-    error("Argument 'naRm' must be a single logical.");
-
-  if (length(naRm) != 1)
-    error("Argument 'naRm' must be a single logical.");
-
-  narm = LOGICAL(naRm)[0];
-  if (narm != TRUE && narm != FALSE)
-    error("Argument 'naRm' must be either TRUE or FALSE.");
-
-  hasna = LOGICAL(hasNA)[0];
-
-  /* Get dimensions of 'x'. */
-  PROTECT(ans = getAttrib(x, R_DimSymbol));
-  nrow = INTEGER(ans)[1];
-  ncol = INTEGER(ans)[0];
-
-  /* Double matrices are more common to use. */
-  if (isReal(x)) {
-    ans = rowMediansReal(x, nrow, ncol, narm, hasna, by_column);
-  } else if (isInteger(x)) {
-    ans = rowMediansInteger(x, nrow, ncol, narm, hasna, by_column);
-  } else {
-    UNPROTECT(1);
-    error("Argument 'x' must be a numeric.");
-  }
-
-  UNPROTECT(1);
-
-  return(ans);
-} /* colMedians() */
-//HJ end
 
 /***************************************************************************
  HISTORY:
- 2011-12-11 [HB]
- o BUG FIX: rowMediansReal(..., na.rm=TRUE) did not handle NaN:s, only NA:s.
-   Note that NaN:s does not exist for integers.
- 2011-10-12 [HJ]
- o Added colMedians().
- o Now rowMediansInteger/Real() can operate also by columns, cf. argument
-   'by_column'.
  2007-08-14 [HB]
  o Added checks for user interrupts every 1000 line.
  o Added argument 'hasNA' to rowMedians().
