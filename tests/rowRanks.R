@@ -6,28 +6,27 @@ library("matrixStats")
 set.seed(1)
 
 cat("Consistency checks:\n")
-K <- if (Sys.getenv("_R_CHECK_FULL_") == "") 2 else 20;
+K <- if (Sys.getenv("_R_CHECK_FULL_") == "") 4 else 20
 for (kk in 1:K) {
   cat("Random test #", kk, "\n", sep="")
 
   # Simulate data in a matrix of any shape
   dim <- sample(500:2000, size=2)
   n <- prod(dim)
-  x <- rnorm(n)
+  x <- rnorm(n, sd=10)
   dim(x) <- dim
 
   # Add NAs?
-  nas <- sample(c(TRUE,FALSE), size=1)
-  if (nas) {
-    cat("Adding NAs\n");
+  if ((kk %% 4) %in% c(3,0)) {
+    cat("Adding NAs\n")
     nna <- sample(n, size=1)
     x[sample(length(x), size=nna)] <- as.double(NA)
   }
 
   # Integer or double?
-  if (sample(c(TRUE,FALSE), size=1)) {
-    cat("Coercing to integers\n");
-    storage.mode(x) <- c("integer")
+  if ((kk %% 4) %in% c(2,0)) {
+    cat("Coercing to integers\n")
+    storage.mode(x) <- "integer"
   }
 
   # rowRanks():

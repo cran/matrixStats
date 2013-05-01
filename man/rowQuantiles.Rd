@@ -31,7 +31,9 @@
 }
 
 \value{
-  Returns a \code{\link[base]{numeric}} JxN (JxK) \code{\link[base]{matrix}}.
+  Returns a \code{\link[base]{numeric}} JxN (JxK) \code{\link[base]{matrix}}, where
+  N (K) is the number of rows (columns) for which the J quantiles are
+  calculated.
 }
 
 \examples{
@@ -55,7 +57,7 @@ q0 <- apply(x, MARGIN=2, FUN=quantile, probs=probs)
 stopifnot(all.equal(q0, t(q)))
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   \code{\link[stats]{quantile}}.

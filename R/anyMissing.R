@@ -8,11 +8,12 @@
 # \alias{anyMissing,data.frame-method}
 # \alias{anyMissing,list-method}
 # \alias{anyMissing,NULL-method}
+# \alias{anyMissing,raw-method}
 #
 # @title "Checks if there are any missing values in an object or not"
 #
 # \description{
-#   @get "title". 
+#   @get "title".
 # }
 #
 # \usage{
@@ -21,7 +22,7 @@
 #
 # \arguments{
 #  \item{x}{A @vector, a @list, a @matrix, a @data.frame, or @NULL.}
-#  \item{...}{Not use.}
+#  \item{...}{Not used.}
 # }
 #
 # \value{
@@ -30,7 +31,7 @@
 #
 # \details{
 #   The implementation of this method is optimized for both speed and memory.
-#   The method will return @TRUE at the first detected missing value.
+#   The method will return @TRUE as soon as a missing value is detected.
 # }
 #
 # \examples{
@@ -39,13 +40,13 @@
 #  stopifnot(anyMissing(x) == any(is.na(x)))
 # }
 #
-# @author
+# @author "HB"
 #
 # @keyword iteration
 # @keyword logic
-#*/########################################################################### 
+#*/###########################################################################
 setGeneric("anyMissing", function(x, ...) {
-  standardGeneric("anyMissing")
+  standardGeneric("anyMissing");
 })
 
 setMethod("anyMissing", signature(x="numeric"), function(x, ...) {
@@ -85,6 +86,10 @@ setMethod("anyMissing", signature(x="list"), function(x, ...) {
   FALSE;
 })
 
+setMethod("anyMissing", signature(x="raw"), function(x, ...) {
+  FALSE;
+})
+
 setMethod("anyMissing", signature(x="NULL"), function(x, ...) {
   FALSE;
 })
@@ -92,6 +97,8 @@ setMethod("anyMissing", signature(x="NULL"), function(x, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-01-13
+# o Added anyMissing() for raw, which always returns FALSE.
 # 2008-03-25
 # o Added anyMissing() for matrices, data.frames, lists and NULL.
 # o Added anyMissing() for numeric, logical, complex and character.

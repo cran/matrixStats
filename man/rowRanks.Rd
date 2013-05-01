@@ -20,26 +20,45 @@
 }
 
 \usage{
- rowRanks(x, ...)
- colRanks(x, ...)
+ rowRanks(x, ties.method=c("max", "average", "min"), ...)
+ colRanks(x, ties.method=c("max", "average", "min"), preserveShape = FALSE, ...)
 }
 
 \arguments{
  \item{x}{A \code{\link[base]{numeric}} or \code{\link[base]{integer}} NxK \code{\link[base]{matrix}}.}
+ \item{ties.method}{A \code{\link[base]{character}} string specifying how ties are treated.
+    For details, see below.}
+ \item{preserveShape}{A \code{\link[base]{logical}} specifying whether the \code{\link[base]{matrix}}
+    returned should preserve the input shape of \code{x}, or not.}
  \item{...}{Not used.}
 }
 
 \value{
-  \code{rowRanks()} (\code{colRanks()}) returns an \code{\link[base]{integer}} NxK
-  (KxN) \code{\link[base]{matrix}}.
+ An \code{\link[base]{integer}} \code{\link[base]{matrix}} is returned.
+ The \code{rowRanks()} function always returns an NxK \code{\link[base]{matrix}},
+ where N (K) is the number of rows (columns) whose ranks are calculated.
+
+ The \code{colRanks()} function returns an NxK \code{\link[base]{matrix}},
+ if \code{preserveShape = TRUE}, otherwise an KxN \code{\link[base]{matrix}}.
+
+%%  The mode of the returned matrix is \code{\link[base]{integer}}, except for
+%%  \code{ties.method == "average"} when it is \code{\link[base]{double}}.
 }
 
 \details{
-  The row- (column-) ranks of \code{x} are collected as \emph{rows}
+  The row ranks of \code{x} are collected as \emph{rows}
   of the result matrix.
+
+  The column ranks of \code{x} are collected as \emph{rows}
+  if \code{preserveShape = FALSE}, otherwise as \emph{columns}.
+
   The implementation is optimized for both speed and memory.
   To avoid coercing to \code{\link[base]{double}}s (and hence memory allocation), there
   is a unique implementation for \code{\link[base]{integer}} matrices.
+  It is more memory efficient to do
+  \code{colRanks(x, preserveShape=TRUE)} than
+  \code{t(colRanks(x, preserveShape=FALSE))}.
+
   Currently, \code{colRanks(x)} is just \code{rowRanks(t(x))}.
   Any \code{\link[base]{names}} of \code{x} are ignored and absent in the result.
 }
@@ -50,14 +69,25 @@
 }
 
 \section{Ties}{
-  Ties are ranked equally, as with setting \code{ties.method="max"}
-  in the \code{\link[base]{rank}}() function.
+  When some values are equal ("ties"), argument \code{ties.method}
+  specifies what their ranks should be.
+  If \code{ties.method} is \code{"max"}, ties
+  are ranked as the maximum value.
+  If \code{ties.method} is \code{"average"}, ties are ranked
+  by their average.
+  If \code{ties.method} is \code{"max"} (\code{"min"}), ties
+  are ranked as the maximum (minimum) value.
+  If \code{ties.method} is \code{"average"}, ties are ranked
+  by their average.
+  For further details, see \code{\link[base]{rank}}().
 }
 
 \author{
   Hector Corrada Bravo and Harris Jaffee.
-  The native implementation of \code{rowRanks()} was adapted from
-  Robert Gentleman's \code{rowQ()} in the \pkg{Biobase} package.
+  Peter Langfelder for adding 'ties.method' support.
+  The native implementation of \code{rowRanks()} was adapted by
+  Henrik Bengtsson from Robert Gentleman's \code{rowQ()}
+  in the \pkg{Biobase} package.
 }
 
 \seealso{

@@ -14,7 +14,9 @@
 
 \title{Weighted Median Value}
 
-\usage{\method{weightedMedian}{default}(x, w, na.rm=NA, interpolate=is.null(ties), ties=NULL, method=c("quick", "shell"), ...)}
+\usage{
+\method{weightedMedian}{default}(x, w, na.rm=NA, interpolate=is.null(ties), ties=NULL, method=c("quick", "shell"), ...)
+}
 
 \description{
   Computes a weighted median of a numeric vector.
@@ -51,7 +53,7 @@
 }
 
 \value{
-  Returns the weighted median.
+  Returns a \code{\link[base]{numeric}} scalar.
 }
 
 \details{

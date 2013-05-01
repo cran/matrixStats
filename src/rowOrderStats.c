@@ -2,10 +2,6 @@
  Public methods:
  SEXP rowOrderStats(SEXP x, SEXP which)
 
- Private methods:
- SEXP rowOrderStatsReal(SEXP x, int nrow, int ncol, int qq,)
- SEXP rowOrderStatsInteger(SEXP x, int nrow, int ncol, int qq)
-
  Authors: Adopted from rowQ() by R. Gentleman.
 
  To do: Add support for missing values.
@@ -13,87 +9,22 @@
  Copyright Henrik Bengtsson, 2007-2008
  **************************************************************************/
 /* Include R packages */
-#include <R.h>
 #include <Rdefines.h>
-#include <Rmath.h>
 
+/* 
+TEMPLATE rowOrderStats_<Integer|Real>(...):
+- SEXP rowOrderStats_Real(SEXP x, int nrow, int ncol, int qq);
+- SEXP rowOrderStats_Integer(SEXP x, int nrow, int ncol, int qq);
+ */
+#define METHOD rowOrderStats
 
-SEXP rowOrderStatsReal(SEXP x, int nrow, int ncol, int qq) {
-  SEXP ans;
-  int ii, jj;
-  int *colOffset;
-  double *rowData, *xx;
+#define X_TYPE 'i'
+#include "rowOrderStats_TYPE-template.h"
 
-  /* R allocate a double vector of length 'nrow' */
-  PROTECT(ans = allocVector(REALSXP, nrow));
+#define X_TYPE 'r'
+#include "rowOrderStats_TYPE-template.h"
 
-  /* R allocate memory for the 'rowData'.  This will be 
-     taken care of by the R garbage collector later on. */
-  rowData = (double *) R_alloc(ncol, sizeof(double));
-
-  /* Pre-calculate the column offsets */
-  colOffset = (int *) R_alloc(ncol, sizeof(int));
-  for(jj=0; jj < ncol; jj++) 
-    colOffset[jj] = (int)jj*nrow;
-
-  xx = REAL(x);
-  for(ii=0; ii < nrow; ii++) {
-    for(jj=0; jj < ncol; jj++) {
-      rowData[jj] = xx[ii+colOffset[jj]];
-    }
-
-    /* Sort vector of length 'ncol' up to position 'qq'. 
-       "...partial sorting: they permute x so that x[k] is in the
-       correct place with smaller values to the left, larger ones
-       to the right." */
-    rPsort(rowData, ncol, qq);
-
-    REAL(ans)[ii] = rowData[qq];
-  }
-
-  UNPROTECT(1);
-
-  return(ans);
-}
-
-
-SEXP rowOrderStatsInteger(SEXP x, int nrow, int ncol, int qq) {
-  SEXP ans;
-  int ii, jj;
-  int *colOffset;
-  int *rowData, *xx;
-
-  /* R allocate a double vector of length 'nrow' */
-  PROTECT(ans = allocVector(INTSXP, nrow));
-
-  /* R allocate memory for the 'rowData'.  This will be 
-     taken care of by the R garbage collector later on. */
-  rowData = (int *) R_alloc(ncol, sizeof(int));
-
-  /* Pre-calculate the column offsets */
-  colOffset = (int *) R_alloc(ncol, sizeof(int));
-  for(jj=0; jj < ncol; jj++) 
-    colOffset[jj] = (int)jj*nrow;
-
-  xx = INTEGER(x);
-  for(ii=0; ii < nrow; ii++) {
-    for(jj=0; jj < ncol; jj++) 
-      rowData[jj] = xx[ii+colOffset[jj]];
-
-    /* Sort vector of length 'ncol' up to position 'qq'. 
-       "...partial sorting: they permute x so that x[k] is in the
-       correct place with smaller values to the left, larger ones
-       to the right." */
-    iPsort(rowData, ncol, qq);
-
-    INTEGER(ans)[ii] = rowData[qq];
-  }
-
-  UNPROTECT(1);
-
-  return(ans);
-}
-
+#undef METHOD
 
 
 
@@ -129,9 +60,9 @@ SEXP rowOrderStats(SEXP x, SEXP which) {
 
   /* Double matrices are more common to use. */
   if (isReal(x)) {
-    ans = rowOrderStatsReal(x, nrow, ncol, qq);
+    ans = rowOrderStats_Real(x, nrow, ncol, qq);
   } else if (isInteger(x)) {
-    ans = rowOrderStatsInteger(x, nrow, ncol, qq);
+    ans = rowOrderStats_Integer(x, nrow, ncol, qq);
   } else {
     UNPROTECT(1);
     error("Argument 'x' must be numeric.");
