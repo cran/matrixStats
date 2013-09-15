@@ -9,8 +9,8 @@
 # }
 #
 # \usage{
-#  rowQuantiles(x, probs=seq(from=0, to=1, by=0.25), ..., drop=TRUE)
-#  colQuantiles(x, ...)
+#  @usage rowQuantiles
+#  @usage colQuantiles
 # }
 #
 # \arguments{
@@ -22,7 +22,7 @@
 # }
 #
 # \value{
-#   Returns a @numeric JxN (JxK) @matrix, where
+#   Returns a @numeric NxJ (KxJ) @matrix, where
 #   N (K) is the number of rows (columns) for which the J quantiles are
 #   calculated.
 # }
@@ -53,7 +53,7 @@ rowQuantiles <- function(x, probs=seq(from=0, to=1, by=0.25), ..., drop=TRUE) {
     q[1L,] <- t;
 
     if (nrow >= 2L) {
-      for (rr in 2L:nrow) {
+      for (rr in 2:nrow) {
         q[rr,] <- quantile(x[rr,], probs=probs, ...);
       }
     }
@@ -79,6 +79,9 @@ colQuantiles <- function(x, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-07-29 [HB]
+# o DOCUMENTATION: The dimension of the return value was swapped
+#   in help("rowQuantiles").  Noticed by PL.
 # 2011-11-29 [HB]
 # o Added an Rdoc example.
 # 2010-10-06 [HB]

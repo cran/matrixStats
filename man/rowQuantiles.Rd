@@ -18,7 +18,7 @@
 }
 
 \usage{
- rowQuantiles(x, probs=seq(from=0, to=1, by=0.25), ..., drop=TRUE)
+ rowQuantiles(x, probs=seq(from = 0, to = 1, by = 0.25), ..., drop=TRUE)
  colQuantiles(x, ...)
 }
 
@@ -31,7 +31,7 @@
 }
 
 \value{
-  Returns a \code{\link[base]{numeric}} JxN (JxK) \code{\link[base]{matrix}}, where
+  Returns a \code{\link[base]{numeric}} NxJ (KxJ) \code{\link[base]{matrix}}, where
   N (K) is the number of rows (columns) for which the J quantiles are
   calculated.
 }

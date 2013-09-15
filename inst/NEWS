@@ -1,6 +1,33 @@
 Package: matrixStats
 ====================
 
+Version: 0.8.10 [2013-09-15]
+o CLEANUP: Now only importing two functions from the 'methods' package.
+o Bumped up package dependencies.
+
+
+Version: 0.8.9 [2013-08-29]
+o CLEANUP: Now the package startup message acknowledges argument
+  'quietly' of library()/require().
+
+
+Version: 0.8.8 [2013-07-29]
+o DOCUMENTATION: The dimension of the return value was swapped
+  in help("rowQuantiles").
+
+
+Version: 0.8.7 [2013-07-28]
+o SPEEDUP: Made (col|row)Mins() and (col|row)Maxs() much faster.
+o BUG FIX: rowRanges(x) on an Nx0 matrix would give an error.
+  Same for colRanges(x) on an 0xN matrix.  Added system tests
+  for these and other special cases.
+
+
+Version: 0.8.6 [2013-07-20]
+o Forgot to declare S3 methods (col|row)WeightedMedians().
+o Bumped up package dependencies.
+
+
 Version: 0.8.5 [2013-05-25]
 o Minor speedup of (col|row)Tabulates() by replacing rm() calls
   with NULL assignments.
