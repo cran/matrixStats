@@ -13,7 +13,7 @@
 \title{Fast element counting in non-overlapping bins}
 
 \usage{
-\method{binCounts}{default}(x, bx, ...)
+\method{binCounts}{default}(x, bx, right=FALSE, ...)
 }
 
 \description{
@@ -25,11 +25,19 @@
   \item{bx}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of B+1 ordered positions specifying
      the B bins \code{[bx[1],bx[2])}, \code{[bx[2],bx[3])}, ...,
      \code{[bx[B],bx[B+1])}.}
+  \item{right}{If \code{\link[base:logical]{TRUE}}, the bins are right-closed (left open),
+     otherwise left-closed (right open).}
   \item{...}{Not used.}
 }
 
 \value{
   Returns an \code{\link[base]{integer}} \code{\link[base]{vector}} of length B with non-negative integers.
+}
+
+\details{
+  \code{binCounts(x, bx, right=TRUE)} gives equivalent results as
+  \code{rev(binCounts(-x, bx=rev(-bx), right=FALSE))}, but is
+  faster and more memory efficient.
 }
 
 \section{Missing and non-finite values}{
@@ -38,9 +46,14 @@
 }
 
 \seealso{
-  Note that \code{\link[graphics]{hist}} is almost as fast for counting
-  occurances within bins, e.g.
-  \code{hist(x, breaks=bx, right=FALSE, plot=FALSE)$counts}.
+  An alternative for counting occurances within bins is
+  \code{\link[graphics]{hist}}, e.g. \code{hist(x, breaks=bx, plot=FALSE)$counts}.
+  That approach is ~30-60\% slower than \code{binCounts(..., right=TRUE)}.
+
+  To count occurances of indices \code{x} (positive \code{\link[base]{integer}}s) in
+  \code{[1,B]}, use \code{tabulate(x, nbins=B)}, where \code{x} does
+  \emph{not} have to be sorted first.
+  For details, see \code{\link[base]{tabulate}}().
 
   To average values within bins, see \code{\link{binMeans}}().
 }

@@ -1,8 +1,8 @@
 Package: matrixStats
-Version: 0.8.12
+Version: 0.8.14
 Depends: R (>= 2.9.0)
-Imports: methods, R.methodsS3 (>= 1.5.1)
-Date: 2013-09-26
+Imports: methods, R.methodsS3 (>= 1.5.2)
+Date: 2013-11-23
 Title: Methods that apply to rows and columns of a matrix
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
@@ -18,7 +18,7 @@ Description: This packages provides methods operating on rows and columns of mat
 License: Artistic-2.0
 LazyLoad: TRUE
 biocViews: Infrastructure, Statistics
-Packaged: 2013-09-27 02:07:20 UTC; hb
+Packaged: 2014-01-05 07:34:53 UTC; hb
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-09-27 07:51:19
+Date/Publication: 2014-01-05 18:16:31

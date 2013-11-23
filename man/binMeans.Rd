@@ -13,7 +13,7 @@
 \title{Fast mean calculations in non-overlapping bins}
 
 \usage{
-\method{binMeans}{default}(y, x, bx, na.rm=TRUE, count=TRUE, ...)
+\method{binMeans}{default}(y, x, bx, na.rm=TRUE, count=TRUE, right=FALSE, ...)
 }
 
 \description{
@@ -31,11 +31,18 @@
   \item{count}{If \code{\link[base:logical]{TRUE}}, the number of data points in each bins is
      returned as attribute \code{count}, which is an \code{\link[base]{integer}} \code{\link[base]{vector}}
      of length B.}
+  \item{right}{If \code{\link[base:logical]{TRUE}}, the bins are right-closed (left open),
+     otherwise left-closed (right open).}
   \item{...}{Not used.}
 }
 
 \value{
   Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of length B.
+}
+
+\details{
+  \code{binMeans(x, bx, right=TRUE)} gives equivalent results as
+  \code{rev(binMeans(-x, bx=sort(-bx), right=FALSE))}, but is faster.
 }
 
 \section{Missing and non-finite values}{

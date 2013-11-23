@@ -20,11 +20,18 @@
 #   \item{count}{If @TRUE, the number of data points in each bins is
 #      returned as attribute \code{count}, which is an @integer @vector
 #      of length B.}
+#   \item{right}{If @TRUE, the bins are right-closed (left open),
+#      otherwise left-closed (right open).}
 #   \item{...}{Not used.}
 # }
 #
 # \value{
 #   Returns a @numeric @vector of length B.
+# }
+#
+# \details{
+#   \code{binMeans(x, bx, right=TRUE)} gives equivalent results as
+#   \code{rev(binMeans(-x, bx=sort(-bx), right=FALSE))}, but is faster.
 # }
 #
 # \section{Missing and non-finite values}{
@@ -52,7 +59,7 @@
 #
 # @keyword "univar"
 #*/############################################################################
-setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ...) {
+setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, right=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,6 +91,7 @@ setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ..
   if (any(diff(o) != 1L)) {
     stop("Argument 'bx' is not ordered.");
   }
+  o <- NULL; # Not needed anymore
 
   # Argument 'na.rm':
   if (!is.logical(na.rm)) {
@@ -94,6 +102,9 @@ setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ..
   if (!is.logical(count)) {
     stop("Argument 'count' is not logical: ", mode(count));
   }
+
+  # Argument 'right':
+  right <- as.logical(right);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -106,6 +117,7 @@ setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ..
     y <- y[keep];
     n <- length(y);
   }
+  keep <- NULL; # Not needed anymore
 
   # Drop missing values in 'y'?
   if (na.rm) {
@@ -114,6 +126,7 @@ setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ..
       x <- x[keep];
       y <- y[keep];
     }
+    keep <- NULL; # Not needed anymore
   }
 
   # Order (x,y) by increasing x.
@@ -131,12 +144,15 @@ setMethodS3("binMeans", "default", function(y, x, bx, na.rm=TRUE, count=TRUE, ..
   x <- as.numeric(x);
   bx <- as.numeric(bx);
   count <- as.logical(count);
-  .Call("binMeans", y, x, bx, count, PACKAGE="matrixStats");
+  .Call("binMeans", y, x, bx, count, right, PACKAGE="matrixStats");
 }) # binMeans()
 
 
 ############################################################################
 # HISTORY:
+# 2013-11-23 [HB]
+# o MEMORY: binMeans() cleans out more temporary variables as soon as
+#   possible such that the garbage collector can remove them sooner.
 # 2013-05-10 [HB]
 # o SPEEDUP: Now binMeans() and binCounts() use Hoare's Quicksort
 #   method for sorting 'x'.
