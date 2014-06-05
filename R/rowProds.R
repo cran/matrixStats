@@ -2,6 +2,7 @@
 # @RdocFunction rowProds
 # @alias rowProds
 # @alias colProds
+# @alias product
 #
 # @title "Calculates the product for each row (column) in a matrix"
 #
@@ -12,12 +13,15 @@
 # \usage{
 #  @usage rowProds
 #  @usage colProds
+#  @usage product
 # }
 #
 # \arguments{
 #  \item{x}{A @numeric NxK @matrix.}
 #  \item{na.rm}{If @TRUE, missing values are ignored, otherwise not.}
-#  \item{...}{Arguments passed to @see "base::rowSums".}
+#  \item{method}{A @character string specifying how each product
+#   is calculated.}
+#  \item{...}{Not used.}
 # }
 #
 # \value{
@@ -25,9 +29,25 @@
 # }
 #
 # \details{
-#   Internally the product is calculated via the logarithmic transform,
-#   treating zeros and negative values specially.  This enhance the
-#   precision and lower the risk for overflow.
+#   If \code{method="expSumLog"}, then then @see "product" function
+#   is used, which calculates the produce via the logarithmic transform
+#   (treating negative values specially).  This improves the precision
+#   and lowers the risk for numeric overflow.
+#   If \code{method="direct"}, the direct product is calculated via
+#   the @see "base::prod" function.
+# }
+#
+# \section{Missing values}{
+#   Note, if \code{method="expSumLog"} and \code{na.rm=FALSE}, then
+#   results returns @NA regardless of whether there were only @NaN
+#   but no @NA in the first place, e.g. \code{product(NaN)} returns @NA
+#   and \code{product(c(NA, NaN))} returns @NA.
+#   This is contrary to @see "base::prod", which can distinguish between
+#   the two, e.g. \code{prod(NaN)} returns @NaN and
+#   \code{prod(c(NA, NaN))} returns @NA.
+#   The reason for this discrepancy is that it is not possible for
+#   \code{product()} to be consistent with \code{prod()} in this sense
+#   without major performance penalities.
 # }
 #
 # @author "HB"
@@ -37,91 +57,62 @@
 # @keyword robust
 # @keyword univar
 #*/###########################################################################
-rowProds <- function(x, na.rm=FALSE, ...) {
+rowProds <- function(x, na.rm=FALSE, method=c("expSumLog", "direct"), ...) {
+  # Argument 'method':
+  method <- match.arg(method, choices=c("expSumLog", "direct"));
+
   # Preallocate result (zero:ed by default)
-  modeX <- mode(x);
   n <- nrow(x);
-  y <- vector(modeX, length=n);
+  y <- double(length=n);
 
   # Nothing todo?
-  if (n == 0) {
-    return(y);
-  }
+  if (n == 0L) return(y);
 
+  # How to calculate product?
+  prod <- switch(method, expSumLog=product, direct=prod);
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Handle missing values
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  isNA <- is.na(x);
-  rowHasNA <- rowAnys(isNA);
-  hasNAs <- any(rowHasNA);
-  if (hasNAs) {
-    if (na.rm) {
-      oneValue <- 1;
-      mode(oneValue) <- modeX;
-      x[isNA] <- oneValue;
-      rowHasNA <- logical(n); # Defaults to FALSE
-      hasNAs <- FALSE;
-    } else {
-      # Among the rows with missing values, which has NaN:s?
-      rowHasNaN <- logical(n); # Defaults to FALSE
-      isNaN <- is.nan(x[rowHasNA,,drop=FALSE]);
-      rowHasNaN[rowHasNA] <- rowAnys(isNaN);
-    }
-  }
-  isNA <- NULL; # Not needed anymore
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Handle zeros
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Check for rows with at least one zero
-  isZero <- (x == 0);
-  rowHasZero <- rowAnys(isZero);
-  isZero <- NULL; # Not needed anymore
-
-  # Only calculate the products on rows without zeros and missing values
-  toCalc <- (!rowHasNA & !rowHasZero);
-  rowHasZero <- NULL; # Not needed anymore
-  x <- x[toCalc,,drop=FALSE];
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate product via logarithmic sum
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Infer signs
-  isNeg <- (x < 0);
-  isNeg <- rowSums(isNeg);
-  isNeg <- (isNeg %% 2);
-  isNeg <- c(+1,-1)[isNeg+1];
-
-  # Calculate the product via the log transform
-  x <- abs(x);
-  x <- log(x);
-  x <- rowSums(x, ...);
-  x <- exp(x);
-  x <- isNeg*x;
-  y[toCalc] <- x;
-  toCalc <- isNeg <- NULL; # Not needed anymore
-
-  # Missing values?
-  if (hasNAs) {
-    naValue <- NA;
-    mode(naValue) <- modeX;
-    y[rowHasNA] <- naValue;
-    y[rowHasNaN] <- NaN;
+  for (ii in seq_len(n)) {
+    y[ii] <- prod(x[ii,,drop=TRUE], na.rm=na.rm)
   }
 
   y;
 } # rowProds()
 
-colProds <- function(x, na.rm=FALSE, ...) {
-  x <- t(x);
-  rowProds(x, na.rm=na.rm, ...);
+colProds <- function(x, na.rm=FALSE, method=c("expSumLog", "direct"), ...) {
+  # Argument 'method':
+  method <- match.arg(method, choices=c("expSumLog", "direct"));
+
+  # Preallocate result (zero:ed by default)
+  n <- ncol(x);
+  y <- double(length=n);
+
+  # Nothing todo?
+  if (n == 0L) return(y);
+
+  # How to calculate product?
+  prod <- switch(method, expSumLog=product, direct=prod);
+
+  for (ii in seq_len(n)) {
+    y[ii] <- prod(x[,ii,drop=TRUE], na.rm=na.rm)
+  }
+
+  y;
 } # colProds()
+
 
 ############################################################################
 # HISTORY:
+# 2014-06-04 [HB]
+# o Now col- and rowProds() utilizes new product() function.
+# o Added argument 'method' to col- and rowProds().
+# 2014-06-02 [HB]
+# o Now rowProds() uses rowCounts(x) when 'x' is logical.
+# o Now rowProds() avoids subsetting rows unless needed.
+# 2014-03-31 [HB]
+# o BUG FIX: rowProds() would throw "Error in rowSums(isNeg) : 'x' must
+#   be an array of at least two dimensions" on matrices where all rows
+#   contained at least on zero.  Thanks to Roel Verbelen at KU Leuven
+#   for the report.
 # 2013-11-23 [HB]
 # o MEMORY: rowProbs() does a better job cleaning out allocated
 #   objects sooner.

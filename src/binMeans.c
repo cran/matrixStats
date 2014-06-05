@@ -32,6 +32,8 @@ SEXP binMeans(SEXP y, SEXP x, SEXP bx, SEXP retCount, SEXP right) {
 
 /***************************************************************************
  HISTORY:
+ 2014-06-02 [HB]
+  o CLEANUP: Removed unused variable in binMeans().
  2013-10-08 [HB]
   o Now binCounts() calls binCounts_<Lr|lR>().
  2013-05-10 [HB]

@@ -1,0 +1,96 @@
+<%@include file="includes/setup.md.rsp"%>
+<%@meta title="Benchmarks"%>
+<%@meta author="Henrik Bengtsson"%>
+<%@meta date="2014-06-05"%>
+
+<%@include file="${header}"%>
+
+<%
+use("matrixStats")
+use("R.utils")
+
+# Simple logging function
+mprintf <- function(...) {
+  s <- sprintf(...)
+  message(s, appendLF=FALSE)
+  invisible(s)
+}
+lenter <- function(...) {
+  s <- mprintf(...)
+  s <- gsub("[.][.][.](\n)*", "...done\\1", s)
+  lexit <<- function() mprintf(s)
+}
+%>
+
+# <%@meta name="title"%>
+
+List of benchmark report for some of the functions available in the [matrixStats] package.
+
+<%
+path <- cmdArg(path=system.file("benchmarking", package="matrixStats"))
+path <- getAbsolutePath(path)
+message("Processing benchmark report directory: ", path)
+pattern <- "[.]md[.]rsp$"
+filenames <- list.files(path=path, pattern=pattern)
+filenames <- setdiff(filenames, "index.md.rsp")
+names <- gsub(pattern, "", filenames)
+# col- and rowAnyMissing() does not really exist
+names <- setdiff(names, c("colAnyMissing", "rowAnyMissing"))
+message("Number of reports found: ", length(names))
+message(sprintf("Report #%d: %s\n", seq_along(names), names))
+
+rcnames <- grep("^(col|row)", names, value=TRUE)
+onames <- setdiff(names, rcnames)
+urcnames <- sort(unique(gsub("^(col|row)", "", rcnames)))
+%>
+<% ii <- 1L; I <- length(names) %>
+
+## Functions applied to rows and columns
+<% for (uname in urcnames) { %>
+* <% for (prefix in c("col", "row")) { %>
+    <% name <- sprintf("%s%s", prefix, uname) %>
+	<% if (name %in% rcnames) { %>
+  [<%=name%>()](<%={
+  lenter("%d of %d. Benchmarking %s()...\n", ii, I, name)
+  html <- sprintf("%s.html", name)
+  if (!file_test("-f", html)) {
+    html <- matrixStats:::benchmark(name, path=path, workdir=".", envir=new.env())
+    html <- getRelativePath(html)
+    gc()
+  }
+  lexit()
+	ii <- ii + 1
+  html
+}%>)
+	<% } # if (name ...) %>
+  <% } # for (prefix ...) %>
+<% } # for (uname ...) %>
+
+## Other functions
+<% for (name in onames) { %>
+* [<%=name%>()](<%={
+  lenter("%d of %d. Benchmarking %s()...\n", ii, I, name)
+  html <- sprintf("%s.html", name)
+  if (!file_test("-f", html)) {
+    html <- matrixStats:::benchmark(name, path=path, workdir=".", envir=new.env())
+    html <- getRelativePath(html)
+    gc()
+  }
+  lexit()
+  ii <- ii + 1
+  html
+}%>)
+<% } # for (name ...) %>
+
+
+## Appendix
+To reproduce this page and all of its reports, do:
+```r
+path <- system.file("benchmarking", package="matrixStats")
+R.rsp::rfile("index.md.rsp", path=path)
+```
+_Note: Each of the above reports takes up to several minutes to complete._
+
+<%@string appendix="false"%>
+<%@include file="${footer}"%>
+<%@string appendix="true"%>

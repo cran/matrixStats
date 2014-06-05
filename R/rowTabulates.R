@@ -1,9 +1,8 @@
 ###########################################################################/**
 # @RdocFunction rowTabulates
-# @alias rowdTabulates
+# @alias rowTabulates.matrix
 # @alias colTabulates
-# \alias{rowTabulates,matrix-method}
-# \alias{colTabulates,matrix-method}
+# @alias colTabulates.matrix
 #
 # @title "Tabulates the values in a matrix by row (column)"
 #
@@ -12,8 +11,8 @@
 # }
 #
 # \usage{
-#   @usage rowTabulates
-#   @usage colTabulates
+#   @usage rowTabulates,matrix
+#   @usage colTabulates,matrix
 # }
 #
 # \arguments{
@@ -35,12 +34,7 @@
 #
 # @keyword utilities
 #*/###########################################################################
-setGeneric("rowTabulates", function(x, values=NULL, ...) {
-  standardGeneric("rowTabulates");
-})
-
-
-setMethod("rowTabulates", signature(x="matrix"), function(x, values=NULL, ...) {
+setMethodS3("rowTabulates", "matrix", function(x, values=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,33 +72,19 @@ setMethod("rowTabulates", signature(x="matrix"), function(x, values=NULL, ...) {
 
 
   nbrOfValues <- length(values);
-  counts <- matrix(as.integer(0L), nrow=nrow(x), ncol=nbrOfValues);
+  counts <- matrix(0L, nrow=nrow(x), ncol=nbrOfValues);
   colnames(counts) <- names;
 
   dim <- dim(x);
   for (kk in seq(length=nbrOfValues)) {
-    value <- values[kk];
-    hasValue <- (x == value);
-    hasValue <- as.integer(hasValue);
-    dim(hasValue) <- dim;
-    sums <- rowSums(hasValue, ...);
-    hasValue <- NULL; # Not needed anymore
-    sums <- as.integer(sums);
-    counts[,kk] <- sums;
-    sums <- NULL; # Not needed anymore
+    counts[,kk] <- rowCounts(x, value=values[kk], ...);
   }
 
   counts;
 })
 
 
-
-setGeneric("colTabulates", function(x, values=NULL, ...) {
-  standardGeneric("colTabulates");
-})
-
-
-setMethod("colTabulates", signature(x="matrix"), function(x, values=NULL, ...) {
+setMethodS3("colTabulates", "matrix", function(x, values=NULL, ...) {
   x <- t(x);
   counts <- rowTabulates(x, values=values, ...);
   x <- NULL; # Not needed anymore
@@ -117,6 +97,9 @@ setMethod("colTabulates", signature(x="matrix"), function(x, values=NULL, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-06-02
+# o Made rowTabulates() an S3 method (was S4).
+# o SPEEDUP: Now rowTabulates() utilizes rowCounts().
 # 2009-06-20
 # WORKAROUND: Cannot use "%#x" in rowTabulates() when creating the column
 # names of the result matrix.  It gav an error OSX with R v2.9.0 devel

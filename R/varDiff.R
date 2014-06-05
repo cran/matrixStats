@@ -2,9 +2,9 @@
 # @RdocFunction varDiff
 # @alias sdDiff
 # @alias madDiff
-# \alias{varDiff,numeric-method}
-# \alias{sdDiff,numeric-method}
-# \alias{madDiff,numeric-method}
+# \alias{varDiff.numeric}
+# \alias{sdDiff.numeric}
+# \alias{madDiff.numeric}
 #
 # @title "Estimation of discrepancies based on sequential order differences in a vector"
 #
@@ -13,9 +13,9 @@
 # }
 #
 # \usage{
-#  @usage varDiff
-#  @usage sdDiff
-#  @usage madDiff
+#  @usage varDiff,numeric
+#  @usage sdDiff,numeric
+#  @usage madDiff,numeric
 # }
 #
 # \arguments{
@@ -23,6 +23,10 @@
 #  \item{na.rm}{If @TRUE, @NAs are excluded, otherwise not.}
 #  \item{diff}{The positional distance of elements for which the
 #     difference should be calculated.}
+#  \item{trim}{A @double in [0,1/2] specifying the fraction of
+#     observations to be trimmed from each end of (sorted) \code{x}
+#     before estimation.  If \code{trim=1}, then all data points
+#     are trimmed.}
 #  \item{...}{Not used.}
 # }
 #
@@ -45,15 +49,36 @@
 # @keyword robust
 # @keyword univar
 #*/###########################################################################
-setGeneric("varDiff", function(x, na.rm=FALSE, diff=1L, ...) {
-  standardGeneric("varDiff");
-})
-
-setMethod("varDiff", signature(x="numeric"), function(x, na.rm=FALSE, diff=1L, ...) {
+setMethodS3("varDiff", "numeric", function(x, na.rm=FALSE, diff=1L, trim=0, ...) {
   if (na.rm)
     x <- x[!is.na(x)];
-  if (diff > 0L)
+
+  # Nothing to do?
+  n <- length(x);
+  if (n == 0L)
+    return(NA_real_);
+
+  # Calculate differences?
+  if (diff > 0L) {
     x <- diff(x, differences=diff);
+
+    # Nothing to do?
+    n <- length(x);
+    if (n == 0L)
+      return(NA_real_);
+  }
+
+  # Trim?
+  if (trim > 0 && n > 0L) {
+    if (anyMissing(x)) return(NA_real_);
+    lo <- floor(n*trim)+1;
+    hi <- (n+1)-lo;
+    partial <- unique(c(lo, hi))
+    x <- sort.int(x, partial=partial);
+    x <- x[lo:hi];
+  }
+
+  # Estimate
   var <- var(x, na.rm=FALSE);
   x <- NULL; # Not needed anymore
   var/(2^diff);
@@ -62,6 +87,10 @@ setMethod("varDiff", signature(x="numeric"), function(x, na.rm=FALSE, diff=1L, .
 
 ############################################################################
 # HISTORY:
+# 2014-05-24
+# o Turned varDiff() into an S3 method (was S4).
+# 2014-04-26
+# o Added argument 'trim' to madDiff(), sdDiff() and varDiff().
 # 2013-11-23
 # o MEMORY: Now varDiff() cleans out allocated objects sooner.
 # 2012-07-17

@@ -1,10 +1,73 @@
 Package: matrixStats
 ====================
 
+Version: 0.9.7 [2014-06-05]
+o BUG FIX: Introduced a bug in v0.9.5 causing col- and rowVars() and
+  hence also col- and rowSds() to return garbage.  Add package tests
+  for these now.
+
+
+Version: 0.9.6 [2014-06-04]
+o SPEEDUP: Now col- and rowProds() utilizes new product() function.
+o SPEEDUP: Added product() for calculating the product of a numeric
+  vector via the logarithm.
+o Added signTabulate() for tabulating the number of negatives, zeros,
+  positives and missing values.  For doubles, the number of negative
+  and positive infinite values are also counted.
+
+
+Version: 0.9.5 [2014-06-04]
+o Added argument 'method' to col- and rowProds() for controlling how
+  the product is calculated.
+o SPEEDUP: Package is now byte compiled.
+o SPEEDUP: Made weightedMedian() a plain function (was an S3 method).
+o SPEEDUP: Made rowProds() and rowTabulates() significantly faster.
+o SPEEDUP: Now rowCounts(), rowAnys(), rowAlls() and corresponding
+  column methods can search for any value in addition to the
+  default TRUE.  The search for a matching integer or double value
+  is done in native code, which is significantly faster (and more
+  memory efficent because it avoids creating any new objects).
+o SPEEDUP: Made colVars() and colSds() significantly faster and
+  rowVars() and rowSds() a slightly bit faster.
+o SPEEDUP: Turned more S4 methods into S3 methods, e.g. rowCounts(),
+  rowAlls(), rowAnys(), rowTabulates() and rowCollapse().
+o Added benchmark reports, e.g. matrixStats:::benchmark('colMins').
+o CLEANUP: Now only exporting plain functions and generic functions.
+
+
+Version: 0.9.4 [2014-05-23]
+o SPEEDUP: Turned several S4 methods into S3 methods, e.g.
+  indexByRow(), madDiff(), sdDiff() and varDiff().
+
+
+Version: 0.9.3 [2014-04-26]
+o Added argument 'trim' to madDiff(), sdDiff() and varDiff().
+
+
+Version: 0.9.2 [2014-04-04]
+o BUG FIX: The native code of binMeans(x, bx) would try to access
+  an out-of-bounds value of argument 'y' iff 'x' contained elements
+  that are left of all bins in 'bx'.  This bug had no impact on the
+  results and since no assignment was done it should also not crash/
+  core dump R.  This was discovered thanks to new memtests (ASAN and
+  valgrind) provided by CRAN.
+
+
+Version: 0.9.1 [2014-03-31]
+o BUG FIX: rowProds() would throw "Error in rowSums(isNeg) : 'x' must
+  be an array of at least two dimensions" on matrices where all rows
+  contained at least on zero.  Thanks to Roel Verbelen at KU Leuven
+  for the report.
+
+
+Version: 0.9.0 [2014-03-26]
+o Added weighedVar() and weightedSd().
+
+
 Version: 0.8.14 [2013-11-23]
 o MEMORY: Updated all functions to do a better job of cleaning out
   temporarily allocated objects as soon as possible such that the
-  garbage collector can remove them sooner, iff wanted.  This 
+  garbage collector can remove them sooner, iff wanted.  This
   increase the chance for a smaller memory footprint.
 
 
