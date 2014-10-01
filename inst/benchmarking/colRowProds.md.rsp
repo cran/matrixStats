@@ -1,24 +1,23 @@
 <%@include file="includes/setup.md.rsp"%>
 
-<%@string fcnname="rowProds"%>
-<% fcnname <- "<%@string name="fcnname"%>" %>
-<%@meta title="${fcnname}() benchmarks"%>
+<%@string colname="colProds"%>
+<%@string rowname="rowProds"%>
+<% rowname <- "<%@string name="rowname"%>" %>
+<%@meta title="${colname}() and ${rowname}() benchmarks"%>
 <%@meta author="Henrik Bengtsson"%>
-<%@meta date="2014-06-02"%>
+<%@meta date="2014-06-09"%>
 
 <%@include file="${header}"%>
 
 
 # <%@meta name="title"%>
 
-This report benchmark the performance of <%=fcnname%>() against alternative methods.
+This report benchmark the performance of <%=colname%>() and <%=rowname%>() against alternative methods.
 
 ## Alternative methods
 
 * apply() + prod()
 * apply() + product()
-
-See also [StackOverflow:rowProds?].
 
 
 ## Data
@@ -31,19 +30,27 @@ data <- rmatrices(mode="double")
 
 ## Results
 
-<% for (ii in seq_along(data)) { %>
-<%
-dataLabel <- names(data)[ii]
-message(dataLabel)
-X <- data[[dataLabel]]
-gc()
-%>
+<% for (dataLabel in names(data)) { %>
+<% message(dataLabel) %>
 ### <%=dataLabel%> matrix
+
 
 ```r
 <%=withCapture({
 X <- data[[.dataLabel.]]
-stats <- microbenchmark(
+gc()
+
+colStats <- microbenchmark(
+ colProds        = colProds(X, na.rm=FALSE),
+ "apply+prod"    = apply(X, MARGIN=2L, FUN=prod, na.rm=FALSE),
+ "apply+product" = apply(X, MARGIN=2L, FUN=product, na.rm=FALSE),
+ unit = "ms"
+)
+
+X <- t(X)
+gc()
+
+rowStats <- microbenchmark(
  rowProds     = rowProds(X, na.rm=FALSE),
  "apply+prod" = apply(X, MARGIN=1L, FUN=prod, na.rm=FALSE),
  "apply+product" = apply(X, MARGIN=1L, FUN=product, na.rm=FALSE),
@@ -52,19 +59,9 @@ stats <- microbenchmark(
 })%>
 ```
 
-<% benchmarkResults(stats, tags=dataLabel) %>
+<% crBenchmarkResults(colStats, rowStats, tags=dataLabel) %>
 
-<%
-# Sanity checks
-Y <- list(
- rowProds     = rowProds(X, na.rm=FALSE),
- "apply+prod" = apply(X, MARGIN=1L, FUN=prod, na.rm=FALSE),
- "apply+product" = apply(X, MARGIN=1L, FUN=product, na.rm=FALSE)
-)
-lapply(Y, FUN=function(x) stopifnot(isTRUE(all.equal(x, Y[[1]]))))
-%>
-
-<% } # for (ii ...) %>
+<% } # for (dataLabel ...) %>
 
 
 <%@include file="${footer}"%>
@@ -72,6 +69,6 @@ lapply(Y, FUN=function(x) stopifnot(isTRUE(all.equal(x, Y[[1]]))))
 
 <%---------------------------------------------------------------------------
 HISTORY:
-2014-06-02
+2014-06-09
 o Created.
 ---------------------------------------------------------------------------%>

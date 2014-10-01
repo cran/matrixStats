@@ -7,14 +7,9 @@
 
 <%
 use("matrixStats")
-use("R.utils")
+use("R.utils (>= 1.33.0)")
 
 # Simple logging function
-mprintf <- function(...) {
-  s <- sprintf(...)
-  message(s, appendLF=FALSE)
-  invisible(s)
-}
 lenter <- function(...) {
   s <- mprintf(...)
   s <- gsub("[.][.][.](\n)*", "...done\\1", s)
@@ -37,21 +32,21 @@ names <- gsub(pattern, "", filenames)
 # col- and rowAnyMissing() does not really exist
 names <- setdiff(names, c("colAnyMissing", "rowAnyMissing"))
 message("Number of reports found: ", length(names))
-message(sprintf("Report #%d: %s\n", seq_along(names), names))
-
-rcnames <- grep("^(col|row)", names, value=TRUE)
-onames <- setdiff(names, rcnames)
-urcnames <- sort(unique(gsub("^(col|row)", "", rcnames)))
+mprintf("Report #%d: %s\n", seq_along(names), names)
 %>
-<% ii <- 1L; I <- length(names) %>
 
-## Functions applied to rows and columns
-<% for (uname in urcnames) { %>
-* <% for (prefix in c("col", "row")) { %>
-    <% name <- sprintf("%s%s", prefix, uname) %>
-	<% if (name %in% rcnames) { %>
-  [<%=name%>()](<%={
-  lenter("%d of %d. Benchmarking %s()...\n", ii, I, name)
+<% for (ii in seq_along(names)) { %>
+<%
+name <- names[ii]
+if (regexpr("^colRow", name) != -1L) {
+  label <- gsub("^colRow", "", name)
+  label <- sprintf("col%s() and row%s()", label, label)
+} else {
+  label <- sprintf("%s()", name)
+}
+%>
+* [<%=label%>](<%={
+  lenter("%d of %d. Benchmarking %s...\n", ii, length(names), label)
   html <- sprintf("%s.html", name)
   if (!file_test("-f", html)) {
     html <- matrixStats:::benchmark(name, path=path, workdir=".", envir=new.env())
@@ -59,28 +54,9 @@ urcnames <- sort(unique(gsub("^(col|row)", "", rcnames)))
     gc()
   }
   lexit()
-	ii <- ii + 1
   html
 }%>)
-	<% } # if (name ...) %>
-  <% } # for (prefix ...) %>
-<% } # for (uname ...) %>
-
-## Other functions
-<% for (name in onames) { %>
-* [<%=name%>()](<%={
-  lenter("%d of %d. Benchmarking %s()...\n", ii, I, name)
-  html <- sprintf("%s.html", name)
-  if (!file_test("-f", html)) {
-    html <- matrixStats:::benchmark(name, path=path, workdir=".", envir=new.env())
-    html <- getRelativePath(html)
-    gc()
-  }
-  lexit()
-  ii <- ii + 1
-  html
-}%>)
-<% } # for (name ...) %>
+<% } # for (ii ...) %>
 
 
 ## Appendix

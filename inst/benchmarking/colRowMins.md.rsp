@@ -1,17 +1,18 @@
 <%@include file="includes/setup.md.rsp"%>
 
-<%@string fcnname="colMins"%>
-<% fcnname <- "<%@string name="fcnname"%>" %>
-<%@meta title="${fcnname}() benchmarks"%>
+<%@string colname="colMins"%>
+<%@string rowname="rowMins"%>
+<% rowname <- "<%@string name="rowname"%>" %>
+<%@meta title="${colname}() and ${rowname}() benchmarks"%>
 <%@meta author="Henrik Bengtsson"%>
-<%@meta date="2014-06-02"%>
+<%@meta date="2014-06-09"%>
 
 <%@include file="${header}"%>
 
 
 # <%@meta name="title"%>
 
-This report benchmark the performance of <%=fcnname%>() against alternative methods.
+This report benchmark the performance of <%=colname%>() and <%=rowname%>() against alternative methods.
 
 ## Alternative methods
 
@@ -32,31 +33,40 @@ data <- rmatrices(mode="double")
 
 ## Results
 
-<% for (ii in seq_along(data)) { %>
-<%
-dataLabel <- names(data)[ii]
-message(dataLabel)
-X <- data[[dataLabel]]
-gc()
-%>
+<% for (dataLabel in names(data)) { %>
+<% message(dataLabel) %>
 ### <%=dataLabel%> matrix
+
 
 ```r
 <%=withCapture({
 X <- data[[.dataLabel.]]
-stats <- microbenchmark(
+gc()
+
+colStats <- microbenchmark(
  colMins           = colMins(X, na.rm=FALSE),
  "apply+min"       = apply(X, MARGIN=2L, FUN=min, na.rm=FALSE),
  "lapply+pmin"     = do.call(pmin, lapply(seq_len(nrow(X)), function(i) X[i,])),
  "lapply+pmin.int" = do.call(pmin.int, lapply(seq_len(nrow(X)), function(i) X[i,])),
  unit = "ms"
 )
+
+X <- t(X)
+gc()
+
+rowStats <- microbenchmark(
+ rowMins           = rowMins(X, na.rm=FALSE),
+"apply+min"        = apply(X, MARGIN=1L, FUN=min, na.rm=FALSE),
+ "lapply+pmin"     = do.call(pmin, lapply(seq_len(ncol(X)), function(i) X[,i])),
+ "lapply+pmin.int" = do.call(pmin.int, lapply(seq_len(ncol(X)), function(i) X[,i])),
+ unit = "ms"
+)
 })%>
 ```
 
-<% benchmarkResults(stats, tags=dataLabel) %>
+<% crBenchmarkResults(colStats, rowStats, tags=dataLabel) %>
 
-<% } # for (ii ...) %>
+<% } # for (dataLabel ...) %>
 
 
 <%@include file="${footer}"%>
@@ -64,6 +74,6 @@ stats <- microbenchmark(
 
 <%---------------------------------------------------------------------------
 HISTORY:
-2014-06-02
+2014-06-09
 o Created.
 ---------------------------------------------------------------------------%>

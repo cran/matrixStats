@@ -1,6 +1,22 @@
 Package: matrixStats
 ====================
 
+Version: 0.10.3 [2014-10-01]
+o BUG FIX: binMeans() returned 0.0 instead of NA_real_ for empty bins.
+
+
+Version: 0.10.2 [2014-09-01]
+o BUG FIX: On some systems, the package failed to build on R (<= 2.15.3)
+  with compilation error: "redefinition of typedef 'R_xlen_t'".
+
+
+Version: 0.10.1 [2014-06-09]
+o Added benchmark reports for also non-matrixStats functions col/rowSums()
+  and col/rowMeans().
+o Now all colNnn() and rowNnn() methods are benchmarked in a combined
+  report making it possible to also compare colNnn(x) with rowNnn(t(x)).
+
+
 Version: 0.10.0 [2014-06-07]
 o BUG FIX: The package tests for product() incorrectly assumed that the
   value of prod(c(NaN, NA)) is uniquely defined.  However, as documented

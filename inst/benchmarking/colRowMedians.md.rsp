@@ -1,17 +1,18 @@
 <%@include file="includes/setup.md.rsp"%>
 
-<%@string fcnname="rowMedians"%>
-<% fcnname <- "<%@string name="fcnname"%>" %>
-<%@meta title="${fcnname}() benchmarks"%>
+<%@string colname="colMedians"%>
+<%@string rowname="rowMedians"%>
+<% rowname <- "<%@string name="rowname"%>" %>
+<%@meta title="${colname}() and ${rowname}() benchmarks"%>
 <%@meta author="Henrik Bengtsson"%>
-<%@meta date="2014-06-02"%>
+<%@meta date="2014-06-09"%>
 
 <%@include file="${header}"%>
 
 
 # <%@meta name="title"%>
 
-This report benchmark the performance of <%=fcnname%>() against alternative methods.
+This report benchmark the performance of <%=colname%>() and <%=rowname%>() against alternative methods.
 
 ## Alternative methods
 
@@ -28,19 +29,26 @@ data <- rmatrices(mode="double")
 
 ## Results
 
-<% for (ii in seq_along(data)) { %>
-<%
-dataLabel <- names(data)[ii]
-message(dataLabel)
-X <- data[[dataLabel]]
-gc()
-%>
+<% for (dataLabel in names(data)) { %>
+<% message(dataLabel) %>
 ### <%=dataLabel%> matrix
+
 
 ```r
 <%=withCapture({
 X <- data[[.dataLabel.]]
-stats <- microbenchmark(
+gc()
+
+colStats <- microbenchmark(
+ colMedians     = colMedians(X, na.rm=FALSE),
+ "apply+median" = apply(X, MARGIN=2L, FUN=median, na.rm=FALSE),
+ unit = "ms"
+)
+
+X <- t(X)
+gc()
+
+rowStats <- microbenchmark(
  rowMedians     = rowMedians(X, na.rm=FALSE),
  "apply+median" = apply(X, MARGIN=1L, FUN=median, na.rm=FALSE),
  unit = "ms"
@@ -48,9 +56,9 @@ stats <- microbenchmark(
 })%>
 ```
 
-<% benchmarkResults(stats, tags=dataLabel) %>
+<% crBenchmarkResults(colStats, rowStats, tags=dataLabel) %>
 
-<% } # for (ii ...) %>
+<% } # for (dataLabel ...) %>
 
 
 <%@include file="${footer}"%>
@@ -58,6 +66,6 @@ stats <- microbenchmark(
 
 <%---------------------------------------------------------------------------
 HISTORY:
-2014-06-02
+2014-06-09
 o Created.
 ---------------------------------------------------------------------------%>
