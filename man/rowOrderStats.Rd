@@ -20,14 +20,16 @@
 }
 
 \usage{
- rowOrderStats(x, which, ...)
- colOrderStats(x, which, ...)
+ rowOrderStats(x, which, dim.=dim(x), ...)
+ colOrderStats(x, which, dim.=dim(x), ...)
 }
 
 \arguments{
  \item{x}{A \code{\link[base]{numeric}} NxK \code{\link[base]{matrix}}.}
  \item{which}{An \code{\link[base]{integer}} index in [1,K] ([1,N]) indicating which
               order statistic to be returned.}
+ \item{dim.}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length two specifying the
+             dimension of \code{x}, also when not a \code{\link[base]{matrix}}.}
  \item{...}{Not used.}
 }
 
@@ -40,7 +42,6 @@
   speed and memory.
   To avoid coercing to \code{\link[base]{double}}s (and hence memory allocation), there
   is a unique implementation for \code{\link[base]{integer}} matrices.
-  Currently, \code{colOrderStats(x)} is calling \code{rowOrderStats(t(x))}.
 }
 
 \section{Missing values}{

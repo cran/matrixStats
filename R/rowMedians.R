@@ -18,6 +18,8 @@
 # \arguments{
 #  \item{x}{A @numeric NxK @matrix.}
 #  \item{na.rm}{If @TRUE, @NAs are excluded first, otherwise not.}
+#  \item{dim.}{An @integer @vector of length two specifying the
+#              dimension of \code{x}, also when not a @matrix.}
 #  \item{...}{Not used.}
 # }
 #
@@ -48,25 +50,27 @@
 # @keyword robust
 # @keyword univar
 #*/###########################################################################
-setGeneric("rowMedians", function(x, na.rm=FALSE, ...) {
+setGeneric("rowMedians", function(x, na.rm=FALSE, dim.=dim(x), ...) {
   standardGeneric("rowMedians");
 })
 
-setMethod("rowMedians", signature(x="matrix"), function(x, na.rm=FALSE, ...) {
+setMethod("rowMedians", signature(x="matrix"), function(x, na.rm=FALSE, dim.=dim(x), ...) {
+  dim. <- as.integer(dim.)
   na.rm <- as.logical(na.rm);
   hasNAs <- TRUE;  # Add as an argument? /2007-08-24
-  .Call("rowMedians", x, na.rm, hasNAs, TRUE, PACKAGE="matrixStats");
+  .Call("rowMedians", x, dim., na.rm, hasNAs, TRUE, PACKAGE="matrixStats");
 })
 
 
-setGeneric("colMedians", function(x, na.rm=FALSE, ...) {
+setGeneric("colMedians", function(x, na.rm=FALSE, dim.=dim(x), ...) {
   standardGeneric("colMedians");
 })
 
-setMethod("colMedians", signature(x="matrix"), function(x, na.rm=FALSE, ...) {
+setMethod("colMedians", signature(x="matrix"), function(x, na.rm=FALSE, dim.=dim(x), ...) {
+  dim. <- as.integer(dim.)
   na.rm <- as.logical(na.rm);
   hasNAs <- TRUE;  # Add as an argument? /2007-08-24
-  .Call("rowMedians", x, na.rm, hasNAs, FALSE, PACKAGE="matrixStats");
+  .Call("rowMedians", x, dim., na.rm, hasNAs, FALSE, PACKAGE="matrixStats");
 })
 
 

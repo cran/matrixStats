@@ -4,9 +4,9 @@
 
  Copyright Henrik Bengtsson, 2012-2013
  **************************************************************************/
-/* Include R packages */
 #include <Rdefines.h>
-#include <R.h>
+#include "types.h"
+#include "utils.h"
 #include <R_ext/Error.h>
 
 #define BIN_BY 'L'
@@ -17,15 +17,31 @@
 
 
 SEXP binCounts(SEXP x, SEXP bx, SEXP right) {
-  int closedRight = LOGICAL(right)[0];
-  if (closedRight == 0) {
-    return binCounts_L(x, bx);
-  } else if (closedRight == 1) {
-    return binCounts_R(x, bx);
+  SEXP counts = NILSXP;
+  R_xlen_t nbins;
+  int closedRight;
+
+  /* Argument 'x': */
+  assertArgVector(x, (R_TYPE_REAL), "x");
+
+  /* Argument 'bx': */
+  assertArgVector(bx, (R_TYPE_REAL), "bx");
+
+  /* Argument 'right': */
+  closedRight = asLogicalNoNA(right, "right");
+
+  nbins = xlength(bx)-1;
+  PROTECT(counts = allocVector(INTSXP, nbins));
+
+  if (closedRight) {
+    binCounts_R(REAL(x), xlength(x), REAL(bx), nbins, INTEGER(counts));
   } else {
-    error("Unknown value of argument 'right': %d", closedRight);
+    binCounts_L(REAL(x), xlength(x), REAL(bx), nbins, INTEGER(counts));
   }
-  return NULL;
+
+  UNPROTECT(1);
+
+  return(counts);
 } // binCounts()
 
 

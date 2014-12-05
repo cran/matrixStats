@@ -4,14 +4,10 @@
 
  Copyright Henrik Bengtsson, 2014
  **************************************************************************/
-/* Include R packages */
 #include <Rdefines.h>
+#include "types.h"
+#include "utils.h"
 
-/* 
-TEMPLATE signTabulate_<Integer|Real>(...):
-  SEXP signTabulate_Real(SEXP x)
-  SEXP signTabulate_Integer(SEXP x)
- */
 #define METHOD signTabulate
 
 #define X_TYPE 'i'
@@ -27,16 +23,17 @@ SEXP signTabulate(SEXP x) {
   SEXP ans = NILSXP;
 
   /* Argument 'x': */
-  if (!isVector(x))
-    error("Argument 'x' must be a vector.");
+  assertArgVector(x, (R_TYPE_INT | R_TYPE_REAL), "x");
 
   /* Double matrices are more common to use. */
   if (isReal(x)) {
-    ans = signTabulate_Real(x);
+    PROTECT(ans = allocVector(REALSXP, 6));
+    signTabulate_Real(REAL(x), xlength(x), REAL(ans));
+    UNPROTECT(1);
   } else if (isInteger(x)) {
-    ans = signTabulate_Integer(x);
-  } else {
-    error("Argument 'x' must be numeric.");
+    PROTECT(ans = allocVector(REALSXP, 4));
+    signTabulate_Integer(INTEGER(x), xlength(x), REAL(ans));
+    UNPROTECT(1);
   }
 
   return(ans);

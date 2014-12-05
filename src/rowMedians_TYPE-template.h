@@ -1,13 +1,13 @@
 /***********************************************************************
  TEMPLATE:
-  SEXP rowMedians_<Integer|Real>(...)
+  void rowMedians_<Integer|Real>(...)
 
  GENERATES:
-  SEXP rowMedians_Integer(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow)
-  SEXP rowMedians_Real(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow)
+  void rowMedians_Integer(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, int narm, int hasna, int byrow, double *ans)
+  void rowMedians_Real(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, int narm, int hasna, int byrow, double *ans)
 
  Arguments:
-   The following macros ("arguments") should be defined for the 
+   The following macros ("arguments") should be defined for the
    template to work as intended.
 
   - METHOD: the name of the resulting function
@@ -18,39 +18,26 @@
   Template by Henrik Bengtsson.
 
  Copyright: Henrik Bengtsson, 2007-2013
- ***********************************************************************/ 
-#include <R.h>
-#include <Rdefines.h>
+ ***********************************************************************/
+#include <R_ext/Memory.h>
 #include <Rmath.h>
+#include "types.h"
 
 /* Expand arguments:
     X_TYPE => (X_C_TYPE, X_IN_C, X_ISNAN, [METHOD_NAME])
  */
-#include "templates-types.h" 
-
-#if X_TYPE == 'i'
-  #define PSORT iPsort
-#elif X_TYPE == 'r'
-  #define PSORT rPsort
-#endif
+#include "templates-types.h"
 
 
-SEXP METHOD_NAME(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow) {
-  SEXP ans;
+void METHOD_NAME(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, int narm, int hasna, int byrow, double *ans) {
   int isOdd;
-  int ii, jj, kk, qq;
-  int *colOffset;
-  X_C_TYPE *rowData, *xx, value;
+  R_xlen_t ii, jj, kk, qq;
+  R_xlen_t *colOffset;
+  X_C_TYPE *values, value;
 
-  xx = X_IN_C(x);
-
-  /* R allocate memory for the 'rowData'.  This will be 
+  /* R allocate memory for the 'values'.  This will be
      taken care of by the R garbage collector later on. */
-  rowData = (X_C_TYPE *) R_alloc(ncol, sizeof(X_C_TYPE));
-
-  /* R allocate a double vector of length 'nrow'
-     Note that 'nrow' means 'ncol' if byrow=FALSE. */
-  PROTECT(ans = allocVector(REALSXP, nrow));
+  values = (X_C_TYPE *) R_alloc(ncol, sizeof(X_C_TYPE));
 
   /* If there are no missing values, don't try to remove them. */
   if (hasna == FALSE)
@@ -59,7 +46,7 @@ SEXP METHOD_NAME(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow) {
   /* When narm == FALSE, isOdd and qq are the same for all rows */
   if (narm == FALSE) {
     isOdd = (ncol % 2 == 1);
-    qq = (int)(ncol/2) - 1;
+    qq = (R_xlen_t)(ncol/2) - 1;
   } else {
     isOdd = FALSE;
     qq = 0;
@@ -68,28 +55,28 @@ SEXP METHOD_NAME(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow) {
   value = 0;
 
   /* Pre-calculate the column offsets */
-  colOffset = (int *) R_alloc(ncol, sizeof(int));
+  colOffset = (R_xlen_t *) R_alloc(ncol, sizeof(R_xlen_t));
 
   // HJ begin
   if (byrow) {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = (int)jj*nrow;
+    for (jj=0; jj < ncol; jj++)
+      colOffset[jj] = (R_xlen_t)jj*nrow;
   } else {
-    for(jj=0; jj < ncol; jj++) 
-      colOffset[jj] = jj;
+    for (jj=0; jj < ncol; jj++)
+      colOffset[jj] = (R_xlen_t)jj;
   }
   // HJ end
 
   if (hasna == TRUE) {
-    for(ii=0; ii < nrow; ii++) {
-      if(ii % 1000 == 0)
-        R_CheckUserInterrupt(); 
+    for (ii=0; ii < nrow; ii++) {
+      if (ii % 1000 == 0)
+        R_CheckUserInterrupt();
 
-      int rowIdx = byrow ? ii : ncol*ii; //HJ
+      R_xlen_t rowIdx = byrow ? ii : ncol*ii; //HJ
 
       kk = 0;  /* The index of the last non-NA value detected */
-      for(jj=0; jj < ncol; jj++) {
-        value = xx[rowIdx+colOffset[jj]]; //HJ
+      for (jj=0; jj < ncol; jj++) {
+        value = x[rowIdx+colOffset[jj]]; //HJ
 
         if (X_ISNAN(value)) {
           if (narm == FALSE) {
@@ -97,87 +84,82 @@ SEXP METHOD_NAME(SEXP x, int nrow, int ncol, int narm, int hasna, int byrow) {
             break;
           }
         } else {
-          rowData[kk] = value;
+          values[kk] = value;
           kk = kk + 1;
         }
       }
-  
+
+      /* Note that 'values' will never contain NA/NaNs */
+
       if (kk == 0) {
-        REAL(ans)[ii] = R_NaN;
+        ans[ii] = R_NaN;
       } else if (kk == -1) {
-        REAL(ans)[ii] = R_NaReal;
+        ans[ii] = R_NaReal;
       } else {
         /* When narm == TRUE, isOdd and qq may change with row */
         if (narm == TRUE) {
           isOdd = (kk % 2 == 1);
-          qq = (int)(kk/2) - 1;
+          qq = (R_xlen_t)(kk/2) - 1;
         }
-  
-        /* Permute x[0:kk-1] so that x[qq] is in the correct 
+
+        /* Permute x[0:kk-1] so that x[qq] is in the correct
            place with smaller values to the left, ... */
-        PSORT(rowData, kk, qq+1);
-        value = rowData[qq+1];
+        X_PSORT(values, kk, qq+1);
+        value = values[qq+1];
 
         if (isOdd == TRUE) {
-          REAL(ans)[ii] = (double)value;
+          ans[ii] = (double)value;
         } else {
-          if (narm == TRUE || !X_ISNAN(value)) {
-            /* Permute x[0:qq-2] so that x[qq-1] is in the correct 
-               place with smaller values to the left, ... */
-            PSORT(rowData, qq+1, qq);
-            if (X_ISNAN(rowData[qq]))
-              REAL(ans)[ii] = R_NaReal;
-            else
-              REAL(ans)[ii] = ((double)(rowData[qq] + value))/2;
-          } else {
-            REAL(ans)[ii] = (double)value;
-          }
+          /* Permute x[0:qq-2] so that x[qq-1] is in the correct
+             place with smaller values to the left, ... */
+          X_PSORT(values, qq+1, qq);
+          ans[ii] = ((double)values[qq] + (double)value)/2;
         }
       }
     }
   } else {
-    for(ii=0; ii < nrow; ii++) {
-      if(ii % 1000 == 0)
-        R_CheckUserInterrupt(); 
+    for (ii=0; ii < nrow; ii++) {
+      if (ii % 1000 == 0)
+        R_CheckUserInterrupt();
 
-      int rowIdx = byrow ? ii : ncol*ii; //HJ
+      R_xlen_t rowIdx = byrow ? ii : ncol*ii; //HJ
 
-      for(jj=0; jj < ncol; jj++)
-        rowData[jj] = xx[rowIdx+colOffset[jj]]; //HJ
-  
-      /* Permute x[0:ncol-1] so that x[qq] is in the correct 
+      for (jj=0; jj < ncol; jj++)
+        values[jj] = x[rowIdx+colOffset[jj]]; //HJ
+
+      /* Permute x[0:ncol-1] so that x[qq] is in the correct
          place with smaller values to the left, ... */
-      PSORT(rowData, ncol, qq+1);
-      value = rowData[qq+1];
+      X_PSORT(values, ncol, qq+1);
+      value = values[qq+1];
 
       if (isOdd == TRUE) {
-        REAL(ans)[ii] = (double)value;
+        ans[ii] = (double)value;
       } else {
-        /* Permute x[0:qq-2] so that x[qq-1] is in the correct 
+        /* Permute x[0:qq-2] so that x[qq-1] is in the correct
            place with smaller values to the left, ... */
-        PSORT(rowData, qq+1, qq);
-        REAL(ans)[ii] = (double)((rowData[qq] + value))/2;
+        X_PSORT(values, qq+1, qq);
+        ans[ii] = ((double)values[qq] + (double)value)/2;
       }
 
     }
   } /* if (hasna ...) */
-
-  UNPROTECT(1);
-
-  return(ans);
 }
 
 /* Undo template macros */
-#undef PSORT
-#include "templates-types_undef.h" 
+#include "templates-types_undef.h"
 
 
 /***************************************************************************
  HISTORY:
+ 2014-11-06 [HB]
+  o CLEANUP: Moving away from R data types in low-level C functions.
+ 2014-11-01 [HB]
+  o SPEEDUP: Now using 'ansp = REAL(ans)' once and then assigning to
+    'ansp' instead of to 'REAL(ans)'.
  2013-04-23 [HB]
   o BUG FIX: The integer template of rowMedians_<Integer|Real>() would
     not handle ties properly.  This was because ties were calculated as
-    '(double)((rowData[qq] + value)/2)' instead of 
+    '(double)((rowData[qq] + value)/2)' instead of
     '((double)(rowData[qq] + value))/2'.
  2013-01-13 [HB]
   o Merged rowMedians_Integer() and rowMedians_Read() into template

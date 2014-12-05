@@ -20,6 +20,8 @@
 #   \item{x}{An NxK @matrix.}
 #   \item{idxs}{An index @vector of (maximum) length N (K) specifying the
 #    columns (rows) to be extracted.}
+#  \item{dim.}{An @integer @vector of length two specifying the
+#              dimension of \code{x}, also when not a @matrix.}
 #   \item{...}{Not used.}
 # }
 #
@@ -38,24 +40,42 @@
 #
 # @keyword utilities
 #*/###########################################################################
-setMethodS3("rowCollapse", "matrix", function(x, idxs, ...) {
-  dim <- dim(x);
-  colOffsets <- c(0L, cumsum(rep(dim[1L], times=dim[2L]-1L)));
-  rowOffsets <- seq_len(dim[1L]);
-  idxs <- rep(idxs, length.out=dim[1L]);
-  colOffsets <- colOffsets[idxs];
-  idxs <- rowOffsets + colOffsets;
-  rowOffsets <- colOffsets <- NULL; # Not needed anymore
-  x[idxs];
+setMethodS3("rowCollapse", "matrix", function(x, idxs, dim.=dim(x), ...) {
+  # Argument 'idxs':
+  idxs <- rep(idxs, length.out=dim.[1L])
+
+  # Columns of interest
+  cols <- 0:(dim.[2L]-1L)
+  cols <- cols[idxs]
+
+  # Calculate column-based indices
+  idxs <- dim.[1L] * cols + seq_len(dim.[1L])
+  cols <- NULL # Not needed anymore
+
+  x[idxs]
 })
 
-setMethodS3("colCollapse", "matrix", function(x, idxs, ...) {
-  rowCollapse(t(x), idxs=idxs, ...);
+setMethodS3("colCollapse", "matrix", function(x, idxs, dim.=dim(x), ...) {
+  # Argument 'idxs':
+  idxs <- rep(idxs, length.out=dim.[2L])
+
+  # Rows of interest
+  rows <- seq_len(dim.[1L])
+  rows <- rows[idxs]
+
+  # Calculate column-based indices
+  idxs <- dim.[1L] * 0:(dim.[2L]-1L) + rows
+  rows <- NULL # Not needed anymore
+
+  x[idxs]
 })
 
 
 ############################################################################
 # HISTORY:
+# 2014-11-15
+# o SPEEDUP: Made calculation of colOffsets faster.
+# o SPEEDUP: Now colCollapse(x) no longer utilizes rowCollapse(t(x)).
 # 2014-06-02
 # o Made rowCollapse() an S3 method (was S4).
 # 2013-11-23

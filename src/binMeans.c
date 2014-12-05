@@ -4,9 +4,9 @@
 
  Copyright Henrik Bengtsson, 2012-2013
  **************************************************************************/
-/* Include R packages */
 #include <Rdefines.h> 
-#include <R.h>
+#include "types.h"
+#include "utils.h"
 #include <R_ext/Error.h>
 
 #define BIN_BY 'L'
@@ -17,21 +17,62 @@
 
 
 SEXP binMeans(SEXP y, SEXP x, SEXP bx, SEXP retCount, SEXP right) {
-  int closedRight = LOGICAL(right)[0];
-  if (closedRight == 0) {
-    return binMeans_L(y, x, bx, retCount);
-  } else if (closedRight == 1) {
-    return binMeans_R(y, x, bx, retCount);
-  } else {
-    error("Unknown value of argument 'right': %d", closedRight);
+  SEXP ans = NILSXP, count = NILSXP;
+  R_xlen_t nx, ny, nbins;
+  int closedRight, retcount;
+  int *count_ptr = NULL;
+
+  /* Argument 'y': */
+  assertArgVector(y, (R_TYPE_REAL), "y");
+  ny = xlength(y);
+
+  /* Argument 'x': */
+  assertArgVector(x, (R_TYPE_REAL), "x");
+  nx = xlength(x);
+  if (nx != ny) {
+    error("Argument 'y' and 'x' are of different lengths: %d != %d", ny, nx);
   }
-  return NULL;
+
+  /* Argument 'bx': */
+  assertArgVector(bx, (R_TYPE_REAL), "bx");
+  nbins = xlength(bx)-1;
+
+  /* Argument 'right': */
+  closedRight = asLogicalNoNA(right, "right");
+
+  /* Argument 'retCount': */
+  retcount = asLogicalNoNA(retCount, "retCount");
+
+  PROTECT(ans = allocVector(REALSXP, nbins));
+  if (retcount) {
+    PROTECT(count = allocVector(INTSXP, nbins));
+    count_ptr = INTEGER(count);
+  }
+
+  if (closedRight) {
+    binMeans_R(REAL(y), ny, REAL(x), nx, REAL(bx), nbins, REAL(ans), count_ptr);
+  } else {
+    binMeans_L(REAL(y), ny, REAL(x), nx, REAL(bx), nbins, REAL(ans), count_ptr);
+  }
+
+  if (retcount) {
+    setAttrib(ans, install("count"), count);
+    UNPROTECT(1); // 'count'
+  }
+  UNPROTECT(1); // 'ans'
+
+  return ans;
+
+
+  return(ans);
 } // binMeans()
 
 
 
 /***************************************************************************
  HISTORY:
+ 2014-10-06 [HB]
+  o CLEANUP: All argument validation is now done by the high-level C API.
  2014-06-02 [HB]
   o CLEANUP: Removed unused variable in binMeans().
  2013-10-08 [HB]

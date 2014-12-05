@@ -6,31 +6,34 @@
 
  Copyright Henrik Bengtsson, 2007
  **************************************************************************/
-
-/* Include R packages */
 #include <Rdefines.h>
+#include "types.h"
 
 
 SEXP anyMissing(SEXP x) {
   SEXP ans;
-  int n, ii;
+  R_xlen_t nx, ii;
+  double *xdp;
+  int *xip, *xlp;
+  Rcomplex *xcp;
 
   PROTECT(ans = allocVector(LGLSXP, 1));
   LOGICAL(ans)[0] = 0;
 
-  n = length(x);
+  nx = xlength(x);
 
   /* anyMissing() on zero-length objects should always return FALSE,
      just like any(double(0)). */
-  if (n == 0) {
+  if (nx == 0) {
     UNPROTECT(1);
     return(ans);
   }
 
   switch (TYPEOF(x)) {
     case REALSXP:
-      for (ii=0; ii < n; ii++) {
-        if ISNAN(REAL(x)[ii]) {
+      xdp = REAL(x);
+      for (ii=0; ii < nx; ii++) {
+        if ISNAN(xdp[ii]) {
           LOGICAL(ans)[0] = 1;
           break; 
         }
@@ -38,8 +41,9 @@ SEXP anyMissing(SEXP x) {
       break;
 
     case INTSXP:
-      for (ii=0; ii < n; ii++) {
-        if (INTEGER(x)[ii] == NA_INTEGER) {
+      xip = INTEGER(x);
+      for (ii=0; ii < nx; ii++) {
+        if (xip[ii] == NA_INTEGER) {
           LOGICAL(ans)[0] = 1;
           break; 
         }
@@ -47,8 +51,9 @@ SEXP anyMissing(SEXP x) {
       break;
 
     case LGLSXP:
-      for (ii=0; ii < n; ii++) {
-        if (LOGICAL(x)[ii] == NA_LOGICAL) {
+      xlp = LOGICAL(x);
+      for (ii=0; ii < nx; ii++) {
+        if (xlp[ii] == NA_LOGICAL) {
           LOGICAL(ans)[0] = 1;
           break; 
         }
@@ -56,8 +61,9 @@ SEXP anyMissing(SEXP x) {
       break;
 
     case CPLXSXP:
-      for (ii=0; ii < n; ii++) {
-        if (ISNAN(COMPLEX(x)[ii].r) || ISNAN(COMPLEX(x)[ii].i)) {
+      xcp = COMPLEX(x);
+      for (ii=0; ii < nx; ii++) {
+        if (ISNAN(xcp[ii].r) || ISNAN(xcp[ii].i)) {
           LOGICAL(ans)[0] = 1;
           break; 
         }
@@ -65,7 +71,7 @@ SEXP anyMissing(SEXP x) {
       break;
 
     case STRSXP:
-      for (ii=0; ii < n; ii++) {
+      for (ii=0; ii < nx; ii++) {
         if (STRING_ELT(x, ii) == NA_STRING) {
           LOGICAL(ans)[0] = 1;
           break; 

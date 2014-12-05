@@ -9,17 +9,17 @@
 \name{rowCounts}
 \alias{rowCounts}
 
-\alias{rowCounts.matrix}
 \alias{colCounts}
-\alias{colCounts.matrix}
 \alias{rowAnys}
-\alias{rowAnys.matrix}
 \alias{colAnys}
-\alias{colAnys.matrix}
 \alias{rowAlls}
-\alias{rowAlls.matrix}
 \alias{colAlls}
-\alias{colAlls.matrix}
+\alias{rowCounts.default}
+\alias{colCounts.default}
+\alias{rowAnys.default}
+\alias{colAnys.default}
+\alias{rowAlls.default}
+\alias{colAlls.default}
 
 \title{Counts the number of TRUE values in each row (column) of a matrix}
 
@@ -28,18 +28,20 @@
 }
 
 \usage{
-  \method{rowCounts}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
-  \method{colCounts}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
-  \method{rowAlls}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
-  \method{colAlls}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
-  \method{rowAnys}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
-  \method{colAnys}{matrix}(x, value=TRUE, na.rm=FALSE, ...)
+  \method{rowCounts}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
+  \method{colCounts}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
+  \method{rowAlls}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
+  \method{colAlls}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
+  \method{rowAnys}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
+  \method{colAnys}{default}(x, value=TRUE, na.rm=FALSE, dim.=dim(x), ...)
 }
 
 \arguments{
- \item{x}{An NxK \code{\link[base]{matrix}}.}
+ \item{x}{An NxK \code{\link[base]{matrix}} or an N*K \code{\link[base]{vector}}.}
  \item{value}{A value to search for.}
  \item{na.rm}{If \code{\link[base:logical]{TRUE}}, \code{\link[base]{NA}}s are excluded first, otherwise not.}
+ \item{dim.}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length two specifying the
+             dimension of \code{x}, also when not a \code{\link[base]{matrix}}.}
  \item{...}{Not used.}
 }
 
@@ -47,6 +49,17 @@
   \code{rowCounts()} (\code{colCounts()}) returns an \code{\link[base]{integer}} \code{\link[base]{vector}}
   of length N (K).
   The other methods returns a \code{\link[base]{logical}} \code{\link[base]{vector}} of length N (K).
+}
+
+\details{
+  These functions takes either a @matrix or a @vector as input.
+If a @vector, then argument \code{dim} must be specified and
+fulfill \code{prod(dim) == length(x)}.  The result will be
+identical to the results obtained when passing
+\code{matrix(x, nrow=dim[1L], ncol=dim[2L])}, but avoids
+having to temporarily create/allocate a @matrix, if only such
+is needed only for these calculations.
+
 }
 
 \examples{

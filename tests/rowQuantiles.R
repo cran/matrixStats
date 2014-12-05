@@ -1,5 +1,40 @@
 library("matrixStats")
 
+rowQuantiles_R <- function(x, probs, na.rm=FALSE) {
+  q <- apply(x, MARGIN=1L, FUN=quantile, probs=probs, na.rm=na.rm)
+  if (!is.null(dim(q))) q <- t(q)
+  q
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Test with multiple quantiles
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- matrix(1:100, nrow=10, ncol=10)
+probs <- c(0,0.5,1)
+q0 <- rowQuantiles_R(x, probs=probs)
+print(q0)
+q1 <- rowQuantiles(x, probs=probs)
+print(q1)
+stopifnot(all.equal(q1, q0))
+q2 <- colQuantiles(t(x), probs=probs)
+stopifnot(all.equal(q2, q0))
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Test with a single quantile
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- matrix(1:100, nrow=10, ncol=10)
+probs <- c(0.5)
+q0 <- rowQuantiles_R(x, probs=probs)
+print(q0)
+q1 <- rowQuantiles(x, probs=probs)
+print(q1)
+stopifnot(all.equal(q1, q0))
+q2 <- colQuantiles(t(x), probs=probs)
+stopifnot(all.equal(q2, q0))
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Consistency checks
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -23,7 +58,7 @@ for (kk in 1:K) {
   if (hasNA) {
     cat("Adding NAs\n")
     nna <- sample(n, size=1)
-    naValues <- c(as.double(NA), NaN)
+    naValues <- c(NA_real_, NaN)
     x[sample(length(x), size=nna)] <- sample(naValues, size=nna, replace=TRUE)
   }
 
@@ -33,8 +68,12 @@ for (kk in 1:K) {
     storage.mode(x) <- "integer"
   }
 
+  str(x)
+
   # rowQuantiles():
-  y1 <- matrixStats::rowQuantiles(x, probs=probs, na.rm=hasNA)
-  y2 <- apply(x, MARGIN=1L, FUN=quantile, probs=probs, na.rm=hasNA)
-  stopifnot(all.equal(y1, t(y2)))
+  q0 <- rowQuantiles_R(x, probs=probs, na.rm=hasNA)
+  q1 <- rowQuantiles(x, probs=probs, na.rm=hasNA)
+  stopifnot(all.equal(q1, q0))
+  q2 <- colQuantiles(t(x), probs=probs, na.rm=hasNA)
+  stopifnot(all.equal(q2, q0))
 } # for (kk ...)

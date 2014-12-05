@@ -15,14 +15,14 @@ This report benchmark the performance of <%=fcnname%>() against alternative meth
 
 ## Alternative methods
 
-* product_naive()
+* product_R()
 * prod()
 
 where
 
 ```r
 <%=withCapture({
-product_naive <- function(x, na.rm=FALSE, ...) {
+product_R <- function(x, na.rm=FALSE, ...) {
   # Nothing todo?
   if (length(x) == 0L) return(0);
 
@@ -43,7 +43,7 @@ product_naive <- function(x, na.rm=FALSE, ...) {
   y <- sign*x;
 
   y;
-} # product_naive()
+} # product_R()
 })%>
 ```
 
@@ -74,9 +74,9 @@ x <- data[[.dataLabel.]]
 gc()
 
 stats <- microbenchmark(
- product       = product(x, na.rm=FALSE),
- product_naive = product_naive(x, na.rm=FALSE),
- prod          = prod(x, na.rm=FALSE),
+ product   = product(x, na.rm=FALSE),
+ product_R = product_R(x, na.rm=FALSE),
+ prod      = prod(x, na.rm=FALSE),
  unit = "ms"
 )
 })%>

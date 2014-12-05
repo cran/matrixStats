@@ -19,6 +19,8 @@
 #  \item{x}{A @numeric NxK @matrix.}
 #  \item{which}{An @integer index in [1,K] ([1,N]) indicating which
 #               order statistic to be returned.}
+#  \item{dim.}{An @integer @vector of length two specifying the
+#              dimension of \code{x}, also when not a @matrix.}
 #  \item{...}{Not used.}
 # }
 #
@@ -31,7 +33,6 @@
 #   speed and memory.
 #   To avoid coercing to @doubles (and hence memory allocation), there
 #   is a unique implementation for @integer matrices.
-#   Currently, \code{colOrderStats(x)} is calling \code{rowOrderStats(t(x))}.
 # }
 #
 # \section{Missing values}{
@@ -55,26 +56,32 @@
 # @keyword robust
 # @keyword univar
 #*/###########################################################################
-setGeneric("rowOrderStats", function(x, which, ...) {
+setGeneric("rowOrderStats", function(x, which, dim.=dim(x), ...) {
   standardGeneric("rowOrderStats");
 })
 
-setMethod("rowOrderStats", signature(x="matrix"), function(x, which, ...) {
-  .Call("rowOrderStats", x, which, PACKAGE="matrixStats");
+setMethod("rowOrderStats", signature(x="matrix"), function(x, which, dim.=dim(x), ...) {
+  dim. <- as.integer(dim.)
+  which <- as.integer(which)
+  .Call("rowOrderStats", x, dim., which, PACKAGE="matrixStats");
 })
 
 
-setGeneric("colOrderStats", function(x, which, ...) {
+setGeneric("colOrderStats", function(x, which, dim.=dim(x), ...) {
   standardGeneric("colOrderStats");
 })
 
-setMethod("colOrderStats", signature(x="matrix"), function(x, which, ...) {
-  rowOrderStats(t(x), which=which, ...);
+setMethod("colOrderStats", signature(x="matrix"), function(x, which, dim.=dim(x), ...) {
+  dim. <- as.integer(dim.)
+  which <- as.integer(which)
+  .Call("colOrderStats", x, dim., which, PACKAGE="matrixStats");
 })
 
 
 ############################################################################
 # HISTORY:
+# 2014-11-16
+# o SPEEDUP: Now colOrderStats() also is implemented in native code.
 # 2008-03-25
 # o Added colOrderStats().
 # o Renamed from rowQuantiles() to rowOrderStats(), especially because it

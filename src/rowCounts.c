@@ -4,14 +4,10 @@
 
  Copyright Henrik Bengtsson, 2014
  **************************************************************************/
-/* Include R packages */
 #include <Rdefines.h>
+#include "types.h"
+#include "utils.h"
 
-/* 
-TEMPLATE rowCounts_<Integer|Real>(...):
-- SEXP rowCounts_Real(SEXP x, int nrow, int ncol, int qq);
-- SEXP rowCounts_Integer(SEXP x, int nrow, int ncol, int qq);
- */
 #define METHOD rowCounts
 
 #define X_TYPE 'i'
@@ -20,18 +16,22 @@ TEMPLATE rowCounts_<Integer|Real>(...):
 #define X_TYPE 'r'
 #include "rowCounts_TYPE-template.h"
 
+#define X_TYPE 'l'
+#include "rowCounts_TYPE-template.h"
+
 #undef METHOD
 
 
 
-SEXP rowCounts(SEXP x, SEXP value, SEXP naRm, SEXP hasNA) {
+SEXP rowCounts(SEXP x, SEXP dim, SEXP value, SEXP naRm, SEXP hasNA) {
   SEXP ans;
   int narm, hasna;
-  int nrow, ncol;
+  R_xlen_t nrow, ncol;
 
-  /* Argument 'x': */
-  if (!isMatrix(x))
-    error("Argument 'x' must be a matrix.");
+  /* Argument 'x' & 'dim': */
+  assertArgMatrix(x, dim, (R_TYPE_LGL | R_TYPE_INT | R_TYPE_REAL), "x");
+  nrow = INTEGER(dim)[0];
+  ncol = INTEGER(dim)[1];
 
   /* Argument 'value': */
   if (length(value) != 1)
@@ -41,32 +41,21 @@ SEXP rowCounts(SEXP x, SEXP value, SEXP naRm, SEXP hasNA) {
     error("Argument 'value' must be a numeric value.");
 
   /* Argument 'naRm': */
-  if (!isLogical(naRm))
-    error("Argument 'naRm' must be a single logical.");
-
-  if (length(naRm) != 1)
-    error("Argument 'naRm' must be a single logical.");
-
-  narm = LOGICAL(naRm)[0];
-  if (narm != TRUE && narm != FALSE)
-    error("Argument 'naRm' must be either TRUE or FALSE.");
+  narm = asLogicalNoNA(naRm, "na.rm");
 
   /* Argument 'hasNA': */
-  hasna = LOGICAL(hasNA)[0];
+  hasna = asLogicalNoNA(hasNA, "hasNA");
 
-  /* Get dimensions of 'x'. */
-  PROTECT(ans = getAttrib(x, R_DimSymbol));
-  nrow = INTEGER(ans)[0];
-  ncol = INTEGER(ans)[1];
+  /* R allocate a double vector of length 'nrow' */
+  PROTECT(ans = allocVector(INTSXP, nrow));
 
   /* Double matrices are more common to use. */
   if (isReal(x)) {
-    ans = rowCounts_Real(x, nrow, ncol, value, narm, hasna);
+    rowCounts_Real(REAL(x), nrow, ncol, asReal(value), narm, hasna, INTEGER(ans));
   } else if (isInteger(x)) {
-    ans = rowCounts_Integer(x, nrow, ncol, value, narm, hasna);
-  } else {
-    UNPROTECT(1);
-    error("Argument 'x' must be numeric.");
+    rowCounts_Integer(INTEGER(x), nrow, ncol, asInteger(value), narm, hasna, INTEGER(ans));
+  } else if (isLogical(x)) {
+    rowCounts_Logical(LOGICAL(x), nrow, ncol, asLogical(value), narm, hasna, INTEGER(ans));
   }
 
   UNPROTECT(1);

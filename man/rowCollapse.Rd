@@ -21,14 +21,16 @@
 }
 
 \usage{
-  \method{rowCollapse}{matrix}(x, idxs, ...)
-  \method{colCollapse}{matrix}(x, idxs, ...)
+  \method{rowCollapse}{matrix}(x, idxs, dim.=dim(x), ...)
+  \method{colCollapse}{matrix}(x, idxs, dim.=dim(x), ...)
 }
 
 \arguments{
   \item{x}{An NxK \code{\link[base]{matrix}}.}
   \item{idxs}{An index \code{\link[base]{vector}} of (maximum) length N (K) specifying the
    columns (rows) to be extracted.}
+ \item{dim.}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length two specifying the
+             dimension of \code{x}, also when not a \code{\link[base]{matrix}}.}
   \item{...}{Not used.}
 }
 

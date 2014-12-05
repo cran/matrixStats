@@ -1,6 +1,119 @@
 Package: matrixStats
 ====================
 
+Version: 0.12.0 [2014-12-05]
+o Submitted to CRAN.
+
+
+Version: 0.11.9 [2014-11-26]
+o Added (col|row)Cumsums(), (col|row)Cumprods(), (col|row)Cummins(),
+  and (col|row)Cummaxs().
+o BUG FIX: (col|row)WeightedMeans() with all zero weights gave
+  mean estimates with values 0 instead of NaN.
+
+
+Version: 0.11.8 [2014-11-25]
+o SPEEDUP: Implemented (col|row)Mads(), (col|row)Sds() and
+  (col|row)Vars() in native code.
+o SPEEDUP: Made (col|row)Quantiles(x) faster for 'x' without
+  missing values (and default type=7L quantiles).  It should
+  still be implemented in native code.
+o SPEEDUP: Made rowWeightedMeans() faster.
+o BUG FIX: (col|row)Medians(x) when 'x' is integer would give
+  invalid median values in case (a) it was calculated as the mean
+  of two values ("ties"), and (b) the sum of those values where
+  greater than .Machine$integer.max.  Now such ties are calculated
+  using floating point precision.  Add lots of package tests.
+
+
+Version: 0.11.6 [2014-11-16]
+o SPEEDUP: Now (col|row)Mins(), (col|row)Maxs() and (col|row)Ranges()
+  are implemented in native code providing a significant speedup.
+o SPEEDUP: Now colOrderStats() also is implemented in native code,
+  which indirectly makes colMins(), colMaxs() and colRanges() faster.
+o SPEEDUP: colTabulates(x) no longer uses rowTabulates(t(x)).
+o SPEEDUP: colQuantiles(x) no longer uses rowQuantiles(t(x)).
+o CLEANUP: Argument 'flavor' of (col|row)Ranks() is now ignored.
+
+
+Version: 0.11.5 [2014-11-15]
+o SPEEDUP: Now colCollapse(x) no longer utilizes rowCollapse(t(x)).
+  Added package tests for (col|row)Collapse().
+o SPEEDUP: Now colDiffs(x) no longer uses rowDiffs(t(x)).
+  Added package tests for (col|row)Diffs().
+o SPEEDUP: Package no longer utilizes match.arg() due to
+  its overhead; methods sumOver(), (col|row)Prods() and
+  (col|row)Ranks() were updated.
+o (col|row)Prods() now uses default method="direct" (was "expSumLog").
+
+
+Version: 0.11.4 [2014-11-14]
+o Added support for vector input to several of the row- and column methods
+  as long as the "intended" matrix dimension is specified via argument
+  'dim'.  For instance, rowCounts(x, dim=c(nrow, ncol)) is the same
+  as rowCounts(matrix(x, nrow, ncol)), but more efficient since it
+  avoids creating/allocating a temporary matrix.
+o SPEEDUP: Now colCounts() is implemented in native code.  Moreover,
+  (col|row)Counts() are now also implemented in native code for
+  logical input (previously only for integer and double input).
+  Added more package tests and benchmarks for these functions.
+
+
+Version: 0.11.3 [2014-11-11]
+o Turned sdDiff(),  madDiff(), varDiff(), weightedSd(), weightedVar()
+  and weightedMad() into plain functions (were generic functions).
+o Removed unnecessary usage of '::'.
+
+
+Version: 0.11.2 [2014-11-09]
+o SPEEDUP: Implemented indexByRow() in native code and it is no longer
+  a generic function, but a regular function, which is also faster to
+  call.  The first argument of indexByRow() has been changed to 'dim'
+  such that one should use indexByRow(dim(X)) instead of indexByRow(X)
+  as in the past.  The latter form is still supported, but deprecated.
+o Added allocVector(), allocMatrix() and allocArray() for faster
+  allocation numeric vectors, matrices and arrays, particularly when
+  filled with non-missing values.
+
+
+Version: 0.11.1 [2014-11-07]
+o Better support for long vectors.
+o ROBUSTNESS: Although unlikely, with long vectors support for binCounts()
+  and binMeans() it is possible that a bin gets a higher count than what
+  can be represented by an R integer (.Machine$integer.max=2^31-1).  If
+  that happens, an informative warning is generated and the bin count is
+  set to .Machine$integer.max.  If this happens for binMeans(), the
+  corresponding mean is still properly calculated and valid.
+o PRECISION: Using greater floating-point precision in more internal
+  intermediate calculations, where possible.
+o CLEANUP: Cleanup and harmonized the internal C API such there are two
+  well defined API levels.  The high-level API is called by R via .Call()
+  and takes care of most of the argument validation and construction of
+  the return value.  This function dispatch to functions in the low-level
+  API based on data type(s) and other arguments.  The low-level API is
+  written to work with basic C data types only.
+o BUG FIX: Package incorrectly redefined R_xlen_t on R (>= 3.0.0) systems
+  where LONG_VECTOR_SUPPORT is not supported.
+
+
+Version: 0.11.0 [2014-11-02]
+o Added sumOver() and meanOver(), which are significantly faster versions
+  of sum(x[idxs]) and mean(x[idxs]).  Moreover, instead of having to do
+  sum(as.numeric(x)) to avoid integer overflow when 'x' is an integer
+  vector, one can do sumOver(x, mode="numeric"), which avoids the extra
+  copy created when coercing to numeric (this numeric copy is also twice
+  as large as the integer vector).  Added package tests and benchmark
+  reports for these functions.
+
+
+Version: 0.10.4 [2014-11-01]
+o SPEEDUP: Made anyMissing(), logSumExp(), (col|row)Medians(),
+  (col|row)Counts() slightly faster by making the native code assign
+  the results directly to the native vector instead of to the R vector,
+  e.g. ansp[i] = v where ansp=REAL(ans) instead of REAL(ans)[i] = v.
+o Added benchmark reports for anyMissing() and logSumExp().
+
+
 Version: 0.10.3 [2014-10-01]
 o BUG FIX: binMeans() returned 0.0 instead of NA_real_ for empty bins.
 
@@ -52,7 +165,7 @@ o SPEEDUP: Now rowCounts(), rowAnys(), rowAlls() and corresponding
   column methods can search for any value in addition to the
   default TRUE.  The search for a matching integer or double value
   is done in native code, which is significantly faster (and more
-  memory efficent because it avoids creating any new objects).
+  memory efficient because it avoids creating any new objects).
 o SPEEDUP: Made colVars() and colSds() significantly faster and
   rowVars() and rowSds() a slightly bit faster.
 o SPEEDUP: Turned more S4 methods into S3 methods, e.g. rowCounts(),

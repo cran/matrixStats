@@ -1,5 +1,5 @@
 ############################################################################/**
-# @RdocDefault weightedMad
+# @RdocFunction weightedMad
 #
 # @title "Weighted Median Absolute Deviation (MAD)"
 #
@@ -18,7 +18,7 @@
 #   \item{na.rm}{a logical value indicating whether @NA values in
 #            \code{x} should be stripped before the computation proceeds,
 #            or not.  If @NA, no check at all for @NAs is done.
-#            Default value is @NA (for effiency).}
+#            Default value is @NA (for efficiency).}
 #   \item{constant}{A @numeric scale factor, cf. @see "stats::mad".}
 #   \item{center}{Optional @numeric scalar specifying the center
 #            location of the data.  If @NULL, it is estimated from data.}
@@ -47,7 +47,7 @@
 # @keyword "univar"
 # @keyword "robust"
 #*/############################################################################
-setMethodS3("weightedMad", "default", function(x, w, na.rm=FALSE, constant=1.4826, center=NULL, ...) {
+weightedMad <- function(x, w, na.rm=FALSE, constant=1.4826, center=NULL, ...) {
   # Argument 'x':
   n <- length(x);
 
@@ -125,11 +125,13 @@ setMethodS3("weightedMad", "default", function(x, w, na.rm=FALSE, constant=1.482
   sigma <- constant * sigma;
 
   sigma;
-}) # weightedMad()
+} # weightedMad()
 
 
 ############################################################################
 # HISTORY:
+# 2014-11-10
+# o Turned weightedMad( into a plain function.
 # 2013-11-23
 # o MEMORY: Now weightedMad() cleans out allocated objects sooner.
 # 2013-09-26

@@ -2,20 +2,16 @@
  Public methods:
  SEXP rowOrderStats(SEXP x, SEXP which)
 
- Authors: Adopted from rowQ() by R. Gentleman.
+ Authors: Henrik Bengtsson. Adopted from rowQ() by R. Gentleman.
 
  To do: Add support for missing values.
 
- Copyright Henrik Bengtsson, 2007-2008
+ Copyright Henrik Bengtsson, 2007-2014
  **************************************************************************/
-/* Include R packages */
 #include <Rdefines.h>
+#include "types.h"
+#include "utils.h"
 
-/* 
-TEMPLATE rowOrderStats_<Integer|Real>(...):
-- SEXP rowOrderStats_Real(SEXP x, int nrow, int ncol, int qq);
-- SEXP rowOrderStats_Integer(SEXP x, int nrow, int ncol, int qq);
- */
 #define METHOD rowOrderStats
 
 #define X_TYPE 'i'
@@ -28,13 +24,14 @@ TEMPLATE rowOrderStats_<Integer|Real>(...):
 
 
 
-SEXP rowOrderStats(SEXP x, SEXP which) {
-  SEXP ans;
-  int nrow, ncol, qq;
+SEXP rowOrderStats(SEXP x, SEXP dim, SEXP which) {
+  SEXP ans = NILSXP;
+  R_xlen_t nrow, ncol, qq;
 
-  /* Argument 'x': */
-  if (!isMatrix(x))
-    error("Argument 'x' must be a matrix.");
+  /* Argument 'x' and 'dim': */
+  assertArgMatrix(x, dim, (R_TYPE_INT | R_TYPE_REAL), "x");
+  nrow = INTEGER(dim)[0];
+  ncol = INTEGER(dim)[1];
 
   /* Argument 'which': */
   if (length(which) != 1)
@@ -43,32 +40,24 @@ SEXP rowOrderStats(SEXP x, SEXP which) {
   if (!isNumeric(which))
     error("Argument 'which' must be a numeric number.");
 
-
-  /* Get dimensions of 'x'. */
-  PROTECT(ans = getAttrib(x, R_DimSymbol));
-  nrow = INTEGER(ans)[0];
-  ncol = INTEGER(ans)[1];
-
   /* Subtract one here, since rPsort does zero based addressing */
   qq = asInteger(which) - 1;
 
   /* Assert that 'qq' is a valid index */
   if (qq < 0 || qq >= ncol) {
-    UNPROTECT(1);
     error("Argument 'which' is out of range.");
   }
 
   /* Double matrices are more common to use. */
   if (isReal(x)) {
-    ans = rowOrderStats_Real(x, nrow, ncol, qq);
-  } else if (isInteger(x)) {
-    ans = rowOrderStats_Integer(x, nrow, ncol, qq);
-  } else {
+    PROTECT(ans = allocVector(REALSXP, nrow));
+    rowOrderStats_Real(REAL(x), nrow, ncol, qq, REAL(ans));
     UNPROTECT(1);
-    error("Argument 'x' must be numeric.");
+  } else if (isInteger(x)) {
+    PROTECT(ans = allocVector(INTSXP, nrow));
+    rowOrderStats_Integer(INTEGER(x), nrow, ncol, qq, INTEGER(ans));
+    UNPROTECT(1);
   }
-
-  UNPROTECT(1);
 
   return(ans);
 } // rowOrderStats()

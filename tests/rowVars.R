@@ -1,5 +1,18 @@
 library("matrixStats")
 
+rowVars_R <- function(x, na.rm=FALSE) {
+  suppressWarnings({
+    apply(x, MARGIN=1L, FUN=var, na.rm=na.rm)
+  })
+}
+
+colVars_R <- function(x, na.rm=FALSE) {
+  suppressWarnings({
+    apply(x, MARGIN=2L, FUN=var, na.rm=na.rm)
+  })
+}
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # With and without some NAs
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8,13 +21,13 @@ for (addNA in c(FALSE, TRUE)) {
 
   x <- matrix(1:100, nrow=20, ncol=5)
   if (addNA) {
-    x[13:17,c(2,4)] <- as.double(NA)
+    x[13:17,c(2,4)] <- NA_real_
   }
 
   # Row/column ranges
   for (na.rm in c(FALSE, TRUE)) {
     cat("na.rm=", na.rm, "\n", sep="")
-    r0 <- apply(x, MARGIN=1, FUN=var, na.rm=na.rm)
+    r0 <- rowVars_R(x, na.rm=na.rm)
     r1 <- rowVars(x, na.rm=na.rm)
     r2 <- colVars(t(x), na.rm=na.rm)
     stopifnot(all.equal(r1, r2))
@@ -27,12 +40,10 @@ for (addNA in c(FALSE, TRUE)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # All NAs
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-x <- matrix(as.double(NA), nrow=20, ncol=5)
+x <- matrix(NA_real_, nrow=20, ncol=5)
 for (na.rm in c(FALSE, TRUE)) {
   cat("na.rm=", na.rm, "\n", sep="")
-  suppressWarnings({
-    r0 <- apply(x, MARGIN=1, FUN=var, na.rm=na.rm)
-  })
+  r0 <- rowVars_R(x, na.rm=na.rm)
   r1 <- rowVars(x, na.rm=na.rm)
   r2 <- colVars(t(x), na.rm=na.rm)
   stopifnot(all.equal(r1, r2))
@@ -47,9 +58,7 @@ for (na.rm in c(FALSE, TRUE)) {
 x <- matrix(0, nrow=1, ncol=1)
 for (na.rm in c(FALSE, TRUE)) {
   cat("na.rm=", na.rm, "\n", sep="")
-  suppressWarnings({
-    r0 <- apply(x, MARGIN=1, FUN=var, na.rm=na.rm)
-  })
+  r0 <- rowVars_R(x, na.rm=na.rm)
   r1 <- rowVars(x, na.rm=na.rm)
   r2 <- colVars(t(x), na.rm=na.rm)
   stopifnot(all.equal(r1, r2))

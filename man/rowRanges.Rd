@@ -10,16 +10,12 @@
 \alias{rowRanges}
 
 \alias{colRanges}
+\alias{rowMins}
+\alias{rowMaxs}
+\alias{colMins}
+\alias{colMaxs}
 \alias{rowRanges,matrix-method}
 \alias{colRanges,matrix-method}
-\alias{rowMins}
-\alias{rowMins,matrix-method}
-\alias{rowMaxs}
-\alias{rowMaxs,matrix-method}
-\alias{colMins}
-\alias{colMins,matrix-method}
-\alias{colMaxs}
-\alias{colMaxs,matrix-method}
 
 \title{Gets the range of values in each row (column) of a matrix}
 
@@ -30,15 +26,17 @@
 \usage{
   rowRanges(x, na.rm=FALSE, ...)
   colRanges(x, na.rm=FALSE, ...)
-  rowMins(x, na.rm=FALSE, ...)
-  colMins(x, na.rm=FALSE, ...)
-  rowMaxs(x, na.rm=FALSE, ...)
-  colMaxs(x, na.rm=FALSE, ...)
+  rowMins(x, na.rm=FALSE, dim.=dim(x), ...)
+  colMins(x, na.rm=FALSE, dim.=dim(x), ...)
+  rowMaxs(x, na.rm=FALSE, dim.=dim(x), ...)
+  colMaxs(x, na.rm=FALSE, dim.=dim(x), ...)
 }
 
 \arguments{
  \item{x}{A \code{\link[base]{numeric}} NxK \code{\link[base]{matrix}}.}
  \item{na.rm}{If \code{\link[base:logical]{TRUE}}, \code{\link[base]{NA}}s are excluded first, otherwise not.}
+ \item{dim.}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length two specifying the
+             dimension of \code{x}, also when not a \code{\link[base]{matrix}}.}
  \item{...}{Not used.}
 }
 
@@ -50,11 +48,6 @@
 
   \code{rowMins()/rowMaxs()} (\code{colMins()/colMaxs()}) returns a
   \code{\link[base]{numeric}} \code{\link[base]{vector}} of length N (K).
-}
-
-\details{
-  The \code{rowRanges()} function uses the much faster \code{\link{rowOrderStats}}()
-  if there are no missing values.
 }
 
 \author{Henrik Bengtsson}

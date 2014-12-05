@@ -1,79 +1,65 @@
 /***********************************************************************
  TEMPLATE:
-  SEXP rowCounts_<Integer|Real>(SEXP x, int nrow, int ncol, SEXP value, int narm, int hasna)
+  void rowCounts_<Integer|Real|Logical>(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, X_C_TYPE value, int narm, int hasna, int *ans)
 
  GENERATES:
-  SEXP rowCounts_Real(SEXP x, int nrow, int ncol, SEXP value, int narm, int hasna)
-  SEXP rowCounts_Integer(SEXP x, int nrow, int ncol, SEXP value, int narm, int hasna)
+  void rowCounts_Real(double *x, R_xlen_t nrow, R_xlen_t ncol, double value, int narm, int hasna, int *ans)
+  void rowCounts_Integer(int *x, R_xlen_t nrow, R_xlen_t ncol, int value, int narm, int hasna, int *ans)
+  void rowCounts_Logical(int *x, R_xlen_t nrow, R_xlen_t ncol, int value, int narm, int hasna, int *ans)
 
  Arguments:
    The following macros ("arguments") should be defined for the 
    template to work as intended.
 
   - METHOD_NAME: the name of the resulting function
-  - X_TYPE: 'i' or 'r'
-  - ANS_TYPE: 'i' or 'r'
+  - X_TYPE: 'i', 'r', or 'l'
 
  Copyright: Henrik Bengtsson, 2014
  ***********************************************************************/ 
-#include <Rdefines.h>
-#include <Rmath.h>
+#include "types.h"
 
 /* Expand arguments:
     X_TYPE => (X_C_TYPE, X_IN_C, [METHOD_NAME])
-    ANS_TYPE => (ANS_SXP, ANS_NA, ANS_C_TYPE, ANS_IN_C)
  */
 #include "templates-types.h" 
 
 
-SEXP METHOD_NAME(SEXP x, int nrow, int ncol, SEXP value, int narm, int hasna) {
-  SEXP ans;
-  int ii, jj;
-  int colOffset, count;
-  X_C_TYPE *xx, xvalue, vvalue;
+void METHOD_NAME(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, X_C_TYPE value, int narm, int hasna, int *ans) {
+  R_xlen_t ii, jj, kk;
+  int count;
+  X_C_TYPE xvalue;
 
-  /* R allocate a double vector of length 'nrow' */
-  PROTECT(ans = allocVector(INTSXP, nrow));
-  for(ii=0; ii < nrow; ii++) INTEGER(ans)[ii] = 0;
-
-  xx = X_IN_C(x);
-  vvalue = X_IN_C(value)[0];
+  for(ii=0; ii < nrow; ii++) ans[ii] = 0;
 
   /* Count missing values? [sic!] */
-  if (X_ISNAN(vvalue)) {
+  if (X_ISNAN(value)) {
+    kk = 0;
     for(jj=0; jj < ncol; jj++) {
-      colOffset = (int)jj*nrow;
       for(ii=0; ii < nrow; ii++) {
-        xvalue = xx[ii+colOffset];
-        if (X_ISNAN(xvalue)) {
-          INTEGER(ans)[ii] = INTEGER(ans)[ii] + 1;
-        }
+        xvalue = x[kk++];
+        if (X_ISNAN(xvalue)) ans[ii] = ans[ii] + 1;
       }
     }
   } else {
+    kk = 0;
     for(jj=0; jj < ncol; jj++) {
-      colOffset = (int)jj*nrow;
       for(ii=0; ii < nrow; ii++) {
-        count = INTEGER(ans)[ii];
+        count = ans[ii];
         /* Nothing more to do on this row? */
         if (count == NA_INTEGER) continue;
 
-        xvalue = xx[ii+colOffset];
-        if (xvalue == vvalue) {
-          INTEGER(ans)[ii] = count + 1;
+        xvalue = x[kk++];
+        if (xvalue == value) {
+          ans[ii] = count + 1;
         } else {
           if (!narm && X_ISNAN(xvalue)) {
-            INTEGER(ans)[ii] = NA_INTEGER;
+            ans[ii] = NA_INTEGER;
             continue;
 	  }
 	}
       }
     }
   }
-
-  UNPROTECT(1);
-
-  return(ans);
 }
 
 /* Undo template macros */
@@ -82,6 +68,11 @@ SEXP METHOD_NAME(SEXP x, int nrow, int ncol, SEXP value, int narm, int hasna) {
 
 /***************************************************************************
  HISTORY:
+ 2014-11-06 [HB]
+  o CLEANUP: Moving away from R data types in low-level C functions.
+ 2014-11-01 [HB]
+  o SPEEDUP: Now using ansp = INTEGER(ans) once and then querying/assigning
+    'ansp[i]' instead of INTEGER(ans)[i].
  2014-06-02 [HB]
   o Created.
  **************************************************************************/
