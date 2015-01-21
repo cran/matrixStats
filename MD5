@@ -1,6 +1,6 @@
-52749637334419982cbcbd3b06196459 *DESCRIPTION
+075ccecece88f95dceb3e0a5ca33e977 *DESCRIPTION
 8c536955f13564750d7d0b3c786906b1 *NAMESPACE
-471ff6c606dad35791404c59c4ca40ae *NEWS
+eaf454210ad2beaefe7fc697b2f5e7ce *NEWS
 e11dfd66d9a104fbc5598c52bd2f516d *R/999.package.R
 bc8d37bc4988831234eea6d7d6066e4a *R/allocMatrix.R
 167d3b572a0b0286dee97ab8d30e30fb *R/anyMissing.S4.R
@@ -91,8 +91,8 @@ b0cd7c6661d8b9daad1d281024a6502d *inst/benchmarking/includes/results.md.rsp
 3e75a042f402c6d60fbdb4c236bdb0a9 *inst/benchmarking/weightedMean.md.rsp
 8e98dd36afed6de19c3f9cee6fd6516f *inst/benchmarking/weightedMedian.md.rsp
 7b063158ba0bca2a2550bd7c4f9524c4 *inst/benchmarking/x_OP_y.md.rsp
-81eb3971b0329a786a60cd3c4dd88f22 *inst/doc/matrixStats-methods.html
-1b32a2a017587a62c5eb1d5d417033c9 *inst/doc/matrixStats-methods.md.rsp
+c910ed6b5fe22ccce6166259f7fee963 *inst/doc/matrixStats-methods.html
+7d9963b6c10437823d87bcc2fcff0aa1 *inst/doc/matrixStats-methods.md.rsp
 3be5b91c497cfc857af456c5458bb6e0 *man/allocMatrix.Rd
 b082986ca699b810681766f85e269a87 *man/anyMissing.Rd
 737346b54ad9fbad9dab8bf88161ca2f *man/binCounts.Rd
@@ -100,7 +100,7 @@ b082986ca699b810681766f85e269a87 *man/anyMissing.Rd
 9630ce05eefdd0ca82adcdf85dd71a52 *man/diff2.Rd
 553286071b44b0c10001ec59d437642a *man/indexByRow.Rd
 af64c42bde89a43ba7c504b9414e2eb9 *man/logSumExp.Rd
-fb810ebe532cf561d3a8ee1d6382501a *man/matrixStats-package.Rd
+eb78decfda1f187d8e3be9f23af04283 *man/matrixStats-package.Rd
 aba0b7e73733a5832840a144413e05c8 *man/meanOver.Rd
 3c28f9576492c952ec24547672ff423e *man/rowAvgsPerColSet.Rd
 151d60d30326172538f26016c92d570d *man/rowCollapse.Rd
@@ -141,7 +141,7 @@ d547a6be4752200e2f0f42eb3fb64f89 *src/colOrderStats_TYPE-template.h
 02ba21b3917368d337adf7add87625a7 *src/colRanges.c
 a867a5496ab04e8ab5d4a49262dbd73e *src/colRanges_TYPE-template.h
 2c871e6b2476286f48719a205f3a9c5e *src/diff2.c
-50e3bad9a0dae22bd878381f1716ff66 *src/diff2_TYPE-template.h
+b1a80b6033ed39718422109a0bab98b1 *src/diff2_TYPE-template.h
 122818a15b1026f4617413b21a43f1a1 *src/indexByRow.c
 dff19ccbacd1467c4762d78bf1e28943 *src/logSumExp.c
 d2c4afa6a1d6496a43ff54b83e1aebdc *src/logSumExp_internal.c
@@ -160,7 +160,7 @@ fb21e6b54f957dcb63e36a46721cb11c *src/rowCumMinMaxs_TYPE-template.h
 f55ef3d1110b2f3308ea57f6fbd022d7 *src/rowCumsums.c
 a2b68cba0395c470f24725506735c0cd *src/rowCumsums_TYPE-template.h
 8dbd2448b2bf9332aa6d365b7f14602a *src/rowDiffs.c
-6cd2ef437f2802c075e5a7f2af04d661 *src/rowDiffs_TYPE-template.h
+26c82aefba665e025ae5491716c7c7db *src/rowDiffs_TYPE-template.h
 e5ef7b7ad5e06479598f237b73b78367 *src/rowLogSumExp.c
 04849d41cd620515daa2cc7ac2790255 *src/rowMads.c
 580f567520c6b6d5ceaefa2194658839 *src/rowMads_TYPE-template.h
@@ -185,7 +185,7 @@ b122d69ccf94104d5b3011d985b78b13 *src/utils.h
 ea3621211c22893848083535e4eda33e *src/weightedMean.c
 41a465079f5e63439f7fd250ee1cb0d7 *src/weightedMean_TYPE-template.h
 af4c80e388864cf4790700f347b1a197 *src/weightedMedian.c
-2ef01738d45e9ad2af65aabb83663923 *src/weightedMedian_TYPE-template.h
+b0290ced0f75f7ab1d605a7d5d031522 *src/weightedMedian_TYPE-template.h
 3d4e2f4571c5ab285a3173eaeafc6cec *src/x_OP_y.c
 65749a7d8e1e67d7883891e9d0bdbed0 *src/x_OP_y_TYPE-template.h
 6b09aca9e9b79f8fcb85cdca51b305ad *tests/allocArray.R
@@ -202,7 +202,7 @@ d0c2fc32d3a55bf84541b28c80f185ff *tests/indexByRow.R
 f34beeebaf78a6c3d0d76d2c4c0d5886 *tests/product.R
 6d9b348eebee89fa53cbd74de139b2ea *tests/psortKM.R
 ed056e1acf1adff38bc4e1edae11ac50 *tests/rowAllAnys.R
-0b077c43c09564bc4f9da6b9689a9946 *tests/rowAvgsPerColSet.R
+6b645494332ef6d9e128bfa98cc73960 *tests/rowAvgsPerColSet.R
 1408f031afac3258638f8e91cbac75bd *tests/rowCollapse.R
 620d58ce64da8a96b6955bd07f9e6212 *tests/rowCounts.R
 fcd45c6f4da87c99ac6c18bc003cb379 *tests/rowCumMinMaxs.R
@@ -231,4 +231,4 @@ ad2d1c2555d778e08394ae293ea95990 *tests/rowWeightedMedians.R
 f4de0cf2a8257f93c6ea35cac37ccdfd *tests/weightedMedian.R
 93e729b911e5844a2d8d715ecf1f4367 *tests/weightedVar_etal.R
 23b38c655ed603c5599b77f865795312 *tests/x_OP_y.R
-1b32a2a017587a62c5eb1d5d417033c9 *vignettes/matrixStats-methods.md.rsp
+7d9963b6c10437823d87bcc2fcff0aa1 *vignettes/matrixStats-methods.md.rsp

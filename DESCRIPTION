@@ -1,10 +1,10 @@
 Package: matrixStats
-Version: 0.13.0
+Version: 0.13.1
 Depends: R (>= 2.9.0)
 Imports: methods, R.methodsS3
 Suggests: R.rsp, knitr
 VignetteBuilder: R.rsp
-Date: 2015-01-20
+Date: 2015-01-21
 Title: Methods that Apply to Rows and Columns of a Matrix
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
@@ -24,6 +24,6 @@ ByteCompile: TRUE
 biocViews: Infrastructure, Statistics
 URL: https://github.com/HenrikBengtsson/matrixStats
 BugReports: https://github.com/HenrikBengtsson/matrixStats/issues
-Packaged: 2015-01-21 05:30:11 UTC; hb
+Packaged: 2015-01-21 17:43:35 UTC; hb
 Repository: CRAN
-Date/Publication: 2015-01-21 07:56:49
+Date/Publication: 2015-01-22 22:33:58
