@@ -158,14 +158,15 @@ hr {
 }
 </style>
 
-
+<meta name="keywords" content="matrix, vector, apply, rows, columns, memory, speed">
+<meta name="author" content="Henrik Bengtsson">
 
 </head>
 
 <body>
 <h1>matrixStats: Summary of functions</h1>
 
-<p>Henrik Bengtsson on January 21, 2015</p>
+<p>Henrik Bengtsson on February 13, 2015</p>
 
 <h2>Location and scale estimators</h2>
 
@@ -268,27 +269,6 @@ hr {
 </tr>
 </tbody></table>
 
-<h2>Binning</h2>
-
-<table><thead>
-<tr>
-<th align="left">Estimator</th>
-<th align="left">Functions</th>
-<th align="left">Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td align="left">Counts in disjoint bins</td>
-<td align="left">binCounts()</td>
-<td align="left"><code>binCounts(x, bx)</code></td>
-</tr>
-<tr>
-<td align="left">Sample means (and counts) in disjoint bins</td>
-<td align="left">binMeans()</td>
-<td align="left"><code>binMeans(y, x, bx)</code></td>
-</tr>
-</tbody></table>
-
 <h2>Testing for and counting values</h2>
 
 <table><thead>
@@ -330,6 +310,58 @@ hr {
 </tr>
 </tbody></table>
 
+<h2>Cumulative functions</h2>
+
+<table><thead>
+<tr>
+<th align="left">Operator</th>
+<th align="left">Functions</th>
+<th align="left">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">Cumulative sum</td>
+<td align="left">cumsum(), colCumsums(), rowCumsums()</td>
+<td align="left"><code>cumsum(x); rowCumsums(x)</code></td>
+</tr>
+<tr>
+<td align="left">Cumulative product</td>
+<td align="left">cumprod(), colCumprods(), rowCumprods()</td>
+<td align="left"><code>cumprod(x); rowCumprods(x)</code></td>
+</tr>
+<tr>
+<td align="left">Cumulative minimum</td>
+<td align="left">cummin(), colCummins(), rowCummins()</td>
+<td align="left"><code>cummin(x); rowCummins(x)</code></td>
+</tr>
+<tr>
+<td align="left">Cumulative maximum</td>
+<td align="left">cummax(), colCummaxs(), rowCummaxs()</td>
+<td align="left"><code>cummax(x); rowCummaxs(x)</code></td>
+</tr>
+</tbody></table>
+
+<h2>Binning</h2>
+
+<table><thead>
+<tr>
+<th align="left">Estimator</th>
+<th align="left">Functions</th>
+<th align="left">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">Counts in disjoint bins</td>
+<td align="left">binCounts()</td>
+<td align="left"><code>binCounts(x, bx)</code></td>
+</tr>
+<tr>
+<td align="left">Sample means (and counts) in disjoint bins</td>
+<td align="left">binMeans()</td>
+<td align="left"><code>binMeans(y, x, bx)</code></td>
+</tr>
+</tbody></table>
+
 <h2>Miscellaneous</h2>
 
 <table><thead>
@@ -348,7 +380,7 @@ hr {
 
 <hr/>
 
-<p>matrixStats v0.13.1.  Release: <a href="http://cran.r-project.org/package=matrixStats">CRAN</a>, Development: <a href="https://github.com/HenrikBengtsson/matrixStats">GitHub</a>.</p>
+<p>matrixStats v0.14.0.  Release: <a href="http://cran.r-project.org/package=matrixStats">CRAN</a>, Development: <a href="https://github.com/HenrikBengtsson/matrixStats">GitHub</a>.</p>
 
 </body>
 
