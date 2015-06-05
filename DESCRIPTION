@@ -1,8 +1,8 @@
 Package: matrixStats
-Version: 0.8.14
+Version: 0.8.15
 Depends: R (>= 2.9.0)
 Imports: methods, R.methodsS3 (>= 1.5.2)
-Date: 2013-11-23
+Date: 2015-06-05
 Title: Methods that apply to rows and columns of a matrix
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
@@ -13,12 +13,14 @@ Authors@R: c(
   person("Harris", "Jaffee", role="ctb"),
   person("Peter", "Langfelder", role="ctb"))
 Author: Henrik Bengtsson [aut, cre, cph], Hector Corrada Bravo [ctb], Robert Gentleman [ctb], Ola Hossjer [ctb], Harris Jaffee [ctb], Peter Langfelder [ctb]
-Maintainer: Henrik Bengtsson <henrikb@braju.com>
-Description: This packages provides methods operating on rows and columns of matrices, e.g. col/rowMedians() and col/rowRanks().  There are also some vector-based methods, e.g. anyMissing(), weightedMedians(), and binMeans().  The objective is to have all methods being optimized for speed and memory.
+Maintainer: ORPHANED
+Description: This packages provides methods operating on rows and columns of matrices, e.g. col/rowMedians() and col/rowRanks().  There are also some vector-based methods, e.g. anyMissing(), weightedMedians(), and binMeans().  The objective is to have all methods being optimized for speed and memory usage.
 License: Artistic-2.0
 LazyLoad: TRUE
-biocViews: Infrastructure, Statistics
-Packaged: 2014-01-05 07:34:53 UTC; hb
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-01-05 18:16:31
+Date/Publication: 2014-06-05 09:04:44
+Packaged: 2014-06-05 07:02:15 UTC; ripley
+X-CRAN-Original-Maintainer: Henrik Bengtsson <henrikb@braju.com>
+X-CRAN-Comment: Orphaned on 2014-06-05 as repeated requests to fix
+        memory-acces errors were ignored.

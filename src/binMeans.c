@@ -18,7 +18,6 @@
 
 SEXP binMeans(SEXP y, SEXP x, SEXP bx, SEXP retCount, SEXP right) {
   int closedRight = LOGICAL(right)[0];
-  SEXP count;
   if (closedRight == 0) {
     return binMeans_L(y, x, bx, retCount);
   } else if (closedRight == 1) {

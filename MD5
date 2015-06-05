@@ -1,4 +1,4 @@
-c4c294ccf0af3951affc4abdf99588ea *DESCRIPTION
+119f42d4e89b338c2bfbd54f3547eccf *DESCRIPTION
 d1919c94dbc83b7857cb49d8313bd0a7 *NAMESPACE
 30fa394c12df79976b8eb0863c523233 *R/999.package.R
 955e737542e986842563aef85430155d *R/anyMissing.R
@@ -60,9 +60,9 @@ f3840aaa8b4b264345263d21fa2c5880 *man/weightedMad.Rd
 c403af10977365b3555554052bf19b5c *man/weightedMedian.Rd
 c67a10d76b669d76bc9acb2232563f4f *src/anyMissing.c
 56fcb6822e8379b5eddf5fb193220acd *src/binCounts-BINBY-template.h
-1da4bfecffa6116545f615dcae7a94ba *src/binCounts.c
-5ea37b8f5dec92eae78e35d91c3a2f8a *src/binMeans-BINBY-template.h
-9e26253f38e235d5b340fbd99f7dda6c *src/binMeans.c
+7bca61a6e287c124406e3a9caab470b2 *src/binCounts.c
+531025f7bbc81b7aea295de2b7194cc7 *src/binMeans-BINBY-template.h
+bcbbea22bdbc91a8beae34e4c6d5bf98 *src/binMeans.c
 70d0e05c78d6656060081dae00e2a27c *src/logSumExp.c
 4f5fe05f6924205d5207f1c6f5656720 *src/psortKM.c
 81fff67b96075a876e659bc44a19d5e4 *src/rowMedians.c

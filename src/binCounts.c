@@ -18,7 +18,6 @@
 
 SEXP binCounts(SEXP x, SEXP bx, SEXP right) {
   int closedRight = LOGICAL(right)[0];
-  SEXP count;
   if (closedRight == 0) {
     return binCounts_L(x, bx);
   } else if (closedRight == 1) {

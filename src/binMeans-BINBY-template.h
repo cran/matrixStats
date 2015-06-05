@@ -79,6 +79,7 @@ SEXP METHOD_NAME(SEXP y, SEXP x, SEXP bx, SEXP retCount) {
           break;
         }
       }
+      if (ii >= nx) break;
   
       // Sum and count 
       sum += yp[ii];
