@@ -1,6 +1,6 @@
-fec1b2c19f4b4bc86cb6c839dac1d277 *DESCRIPTION
+dab7f205c5bcaeaad15e117d08c73599 *DESCRIPTION
 42f6507f74264f16d54851706a146a8e *NAMESPACE
-8ab9cd2df985cdebbc71b87c97e9e8ae *NEWS
+1049916234ad2c20de78d7ecdfdc99f8 *NEWS
 e11dfd66d9a104fbc5598c52bd2f516d *R/999.package.R
 bc8d37bc4988831234eea6d7d6066e4a *R/allocMatrix.R
 73feb0716c01b707b332fb56b0ea14c9 *R/anyMissing.R
@@ -9,7 +9,7 @@ fa58bfb1e01279b6f9c8442463bbee0a *R/binCounts.R
 9815c4e21f5374bc7568fc983f46dc3f *R/binMeans.R
 00f9f170fcc64e4d4019b8df23b961e6 *R/diff2.R
 3ae809e6c90777039d408aba05934f7e *R/indexByRow.R
-a014132f0790e4a0b3f5735c7c4c5303 *R/logSumExp.R
+351c0d25c7870c255224b76477f9414b *R/logSumExp.R
 907f12741c8541f5eda282e69881cae9 *R/meanOver.R
 51602457a9df5aecf0ef4755ec0cf546 *R/pkgStartupMessage.R
 a4582e300fa9ef7a75493edfa0ef528b *R/product.R
@@ -92,7 +92,7 @@ d4fe14ce0a8fe23b829bd5d40ecb8638 *inst/benchmarking/includes/references.md.rsp
 3e75a042f402c6d60fbdb4c236bdb0a9 *inst/benchmarking/weightedMean.md.rsp
 8e98dd36afed6de19c3f9cee6fd6516f *inst/benchmarking/weightedMedian.md.rsp
 7b063158ba0bca2a2550bd7c4f9524c4 *inst/benchmarking/x_OP_y.md.rsp
-e8fd901af161b62210a075089fefd84e *inst/doc/matrixStats-methods.html
+4c60cf123ab3a6f4bbc1fa104dd340e9 *inst/doc/matrixStats-methods.html
 582b682419b6ba0c71915913bfb93be4 *inst/doc/matrixStats-methods.md.rsp
 3be5b91c497cfc857af456c5458bb6e0 *man/allocMatrix.Rd
 6802f901274f465d85960be20c594bc6 *man/anyMissing.Rd
@@ -100,8 +100,8 @@ b8b516f170c13a1eae9720526c6572f9 *man/binCounts.Rd
 d0baceff9a154bd804fd4f649ee49f57 *man/binMeans.Rd
 9630ce05eefdd0ca82adcdf85dd71a52 *man/diff2.Rd
 553286071b44b0c10001ec59d437642a *man/indexByRow.Rd
-af64c42bde89a43ba7c504b9414e2eb9 *man/logSumExp.Rd
-50b309653dce68e544da4e0b4c39e0f0 *man/matrixStats-package.Rd
+45c48dae20f6411127fffac4b2fa0cc6 *man/logSumExp.Rd
+6be5a9ac1eb991947dc901e4608e1909 *man/matrixStats-package.Rd
 aba0b7e73733a5832840a144413e05c8 *man/meanOver.Rd
 3c28f9576492c952ec24547672ff423e *man/rowAvgsPerColSet.Rd
 151d60d30326172538f26016c92d570d *man/rowCollapse.Rd
@@ -188,7 +188,7 @@ ea3621211c22893848083535e4eda33e *src/weightedMean.c
 af4c80e388864cf4790700f347b1a197 *src/weightedMedian.c
 b0290ced0f75f7ab1d605a7d5d031522 *src/weightedMedian_TYPE-template.h
 3d4e2f4571c5ab285a3173eaeafc6cec *src/x_OP_y.c
-50ae51c582155ba7c3b2c83294bb22f6 *src/x_OP_y_TYPE-template.h
+47a57b15b5e985c1a233491fbf8b9b81 *src/x_OP_y_TYPE-template.h
 6b09aca9e9b79f8fcb85cdca51b305ad *tests/allocArray.R
 0844bf090717347c46eeae7e7761fd31 *tests/allocMatrix.R
 21b5cbdf48874928843e56f60ee8c449 *tests/allocVector.R
