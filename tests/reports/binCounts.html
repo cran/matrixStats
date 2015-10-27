@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>binCounts() benchmarks</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+<meta name="author" content="Henrik Bengtsson">
+
+</head>
+
+<body>
+<p><a href="http://cran.r-project.org/package=matrixStats">matrixStats</a>: Benchmark report</p>
+
+<hr/>
+
+<h1>binCounts() benchmarks</h1>
+
+<p>This report benchmark the performance of binCounts() against alternative methods.</p>
+
+<h2>Alternative methods</h2>
+
+<ul>
+<li>hist()</li>
+</ul>
+
+<p>as below</p>
+
+<pre><code class="r">&gt; hist &lt;- graphics::hist
+&gt; binCounts_hist &lt;- function(x, bx, right = FALSE, ...) {
++     hist(x, breaks = bx, right = right, include.lowest = TRUE, 
++         plot = FALSE)$counts
++ }
+</code></pre>
+
+<h2>Data type &ldquo;integer&rdquo;</h2>
+
+<h3>Non-sorted simulated data</h3>
+
+<pre><code class="r">&gt; set.seed(48879)
+&gt; nx &lt;- 1e+05
+&gt; xmax &lt;- 0.01 * nx
+&gt; x &lt;- runif(nx, min = 0, max = xmax)
+&gt; storage.mode(x) &lt;- mode
+&gt; str(x)
+ int [1:100000] 722 285 591 3 349 509 216 91 150 383 ...
+&gt; nb &lt;- 10000
+&gt; bx &lt;- seq(from = 0, to = xmax, length.out = nb + 1)
+&gt; bx &lt;- c(-1, bx, xmax + 1)
+</code></pre>
+
+<h3>Results</h3>
+
+<pre><code class="r">&gt; gc()
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 564430 30.2     940480 50.3   750400 40.1
+Vcells 841856  6.5    1667849 12.8  1228006  9.4
+&gt; stats &lt;- microbenchmark(binCounts = binCounts(x, bx = bx), 
++     hist = binCounts_hist(x, bx = bx), unit = &quot;ms&quot;)
+</code></pre>
+
+<p><em>Table: Benchmarking of binCounts() and hist() on integer+unsorted data. The top panel shows times in milliseconds and the bottom panel shows relative times.</em></p>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">16.59222</td>
+<td align="right">19.50034</td>
+<td align="right">22.71832</td>
+<td align="right">20.16554</td>
+<td align="right">22.68929</td>
+<td align="right">115.8014</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">31.35514</td>
+<td align="right">34.61049</td>
+<td align="right">43.89354</td>
+<td align="right">35.42313</td>
+<td align="right">37.56750</td>
+<td align="right">157.2361</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">1.00000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">1.88975</td>
+<td align="right">1.774866</td>
+<td align="right">1.932077</td>
+<td align="right">1.756617</td>
+<td align="right">1.655738</td>
+<td align="right">1.357809</td>
+</tr>
+</tbody></table>
+
+<p><em>Figure: Benchmarking of binCounts() and hist() on integer+unsorted data.  Outliers are displayed as crosses.  Times are in milliseconds.</em>
+<img src="data:image/png;base64,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" alt=""/></p>
+
+<h3>Sorted simulated data</h3>
+
+<pre><code class="r">&gt; x &lt;- sort(x)
+</code></pre>
+
+<pre><code class="r">&gt; gc()
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 638467 34.1    1168576 62.5   940480 50.3
+Vcells 921411  7.1    2081418 15.9  1699509 13.0
+&gt; stats &lt;- microbenchmark(binCounts = binCounts(x, bx = bx), 
++     hist = binCounts_hist(x, bx = bx), unit = &quot;ms&quot;)
+</code></pre>
+
+<p><em>Table: Benchmarking of binCounts() and hist() on integer+sorted data. The top panel shows times in milliseconds and the bottom panel shows relative times.</em></p>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">7.849565</td>
+<td align="right">8.460869</td>
+<td align="right">12.09374</td>
+<td align="right">10.98462</td>
+<td align="right">11.99646</td>
+<td align="right">143.8224</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">13.267385</td>
+<td align="right">14.015154</td>
+<td align="right">20.94032</td>
+<td align="right">16.72637</td>
+<td align="right">17.70107</td>
+<td align="right">122.9788</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">1.690206</td>
+<td align="right">1.656467</td>
+<td align="right">1.731501</td>
+<td align="right">1.522709</td>
+<td align="right">1.475524</td>
+<td align="right">0.8550739</td>
+</tr>
+</tbody></table>
+
+<p><em>Figure: Benchmarking of binCounts() and hist() on integer+sorted data.  Outliers are displayed as crosses.  Times are in milliseconds.</em>
+<img src="data:image/png;base64,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" alt=""/></p>
+
+<h2>Data type &ldquo;double&rdquo;</h2>
+
+<h3>Non-sorted simulated data</h3>
+
+<pre><code class="r">&gt; set.seed(48879)
+&gt; nx &lt;- 1e+05
+&gt; xmax &lt;- 0.01 * nx
+&gt; x &lt;- runif(nx, min = 0, max = xmax)
+&gt; storage.mode(x) &lt;- mode
+&gt; str(x)
+ num [1:100000] 722.11 285.54 591.33 3.42 349.14 ...
+&gt; nb &lt;- 10000
+&gt; bx &lt;- seq(from = 0, to = xmax, length.out = nb + 1)
+&gt; bx &lt;- c(-1, bx, xmax + 1)
+</code></pre>
+
+<h3>Results</h3>
+
+<pre><code class="r">&gt; gc()
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 638488 34.1    1168576 62.5  1168576 62.5
+Vcells 971434  7.5    2081418 15.9  2078871 15.9
+&gt; stats &lt;- microbenchmark(binCounts = binCounts(x, bx = bx), 
++     hist = binCounts_hist(x, bx = bx), unit = &quot;ms&quot;)
+</code></pre>
+
+<p><em>Table: Benchmarking of binCounts() and hist() on double+unsorted data. The top panel shows times in milliseconds and the bottom panel shows relative times.</em></p>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">24.51184</td>
+<td align="right">25.34546</td>
+<td align="right">31.65623</td>
+<td align="right">27.96968</td>
+<td align="right">29.79474</td>
+<td align="right">157.2319</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">30.98790</td>
+<td align="right">33.11149</td>
+<td align="right">38.81089</td>
+<td align="right">34.90248</td>
+<td align="right">37.53651</td>
+<td align="right">146.6468</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">1.264201</td>
+<td align="right">1.306407</td>
+<td align="right">1.226011</td>
+<td align="right">1.247868</td>
+<td align="right">1.259837</td>
+<td align="right">0.9326788</td>
+</tr>
+</tbody></table>
+
+<p><em>Figure: Benchmarking of binCounts() and hist() on double+unsorted data.  Outliers are displayed as crosses.  Times are in milliseconds.</em>
+<img src="data:image/png;base64,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" alt=""/></p>
+
+<h3>Sorted simulated data</h3>
+
+<pre><code class="r">&gt; x &lt;- sort(x)
+</code></pre>
+
+<pre><code class="r">&gt; gc()
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 638503 34.1    1168576 62.5  1168576 62.5
+Vcells 971956  7.5    2081418 15.9  2078871 15.9
+&gt; stats &lt;- microbenchmark(binCounts = binCounts(x, bx = bx), 
++     hist = binCounts_hist(x, bx = bx), unit = &quot;ms&quot;)
+</code></pre>
+
+<p><em>Table: Benchmarking of binCounts() and hist() on double+sorted data. The top panel shows times in milliseconds and the bottom panel shows relative times.</em></p>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">9.040992</td>
+<td align="right">9.78934</td>
+<td align="right">16.65968</td>
+<td align="right">12.49998</td>
+<td align="right">13.17865</td>
+<td align="right">147.0938</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">14.157009</td>
+<td align="right">15.29012</td>
+<td align="right">18.97876</td>
+<td align="right">17.78057</td>
+<td align="right">18.53777</td>
+<td align="right">126.3437</td>
+</tr>
+</tbody></table>
+
+<table><thead>
+<tr>
+<th align="left">expr</th>
+<th align="right">min</th>
+<th align="right">lq</th>
+<th align="right">mean</th>
+<th align="right">median</th>
+<th align="right">uq</th>
+<th align="right">max</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">binCounts</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.000000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr>
+<td align="left">hist</td>
+<td align="right">1.565869</td>
+<td align="right">1.561915</td>
+<td align="right">1.139203</td>
+<td align="right">1.422447</td>
+<td align="right">1.406651</td>
+<td align="right">0.8589329</td>
+</tr>
+</tbody></table>
+
+<p><em>Figure: Benchmarking of binCounts() and hist() on double+sorted data.  Outliers are displayed as crosses.  Times are in milliseconds.</em>
+<img src="data:image/png;base64,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" alt=""/></p>
+
+<h2>Appendix</h2>
+
+<h3>Session information</h3>
+
+<pre><code class="r">R Under development (unstable) (2015-09-16 r69392)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 7 x64 (build 7601) Service Pack 1
+
+locale:
+[1] LC_COLLATE=English_United States.1252 
+[2] LC_CTYPE=English_United States.1252   
+[3] LC_MONETARY=English_United States.1252
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] microbenchmark_1.4-2   ggplot2_1.0.1          knitr_1.11            
+[4] R.devices_2.13.0-9000  R.utils_2.1.0-9000     R.oo_1.19.0           
+[7] R.methodsS3_1.7.0-9000 R.rsp_0.20.0-9000      matrixStats_0.14.2    
+
+loaded via a namespace (and not attached):
+ [1] rex_1.0.1        Rcpp_0.12.1      magrittr_1.5     covr_1.2.3      
+ [5] MASS_7.3-44      munsell_0.4.2    colorspace_1.2-6 R.cache_0.11.0  
+ [9] highr_0.5.1      stringr_1.0.0    plyr_1.8.3       tools_3.3.0     
+[13] grid_3.3.0       gtable_0.1.2     lazyeval_0.1.10  digest_0.6.8    
+[17] reshape2_1.4.1   base64enc_0.1-3  labeling_0.3     stringi_0.5-5   
+[21] scales_0.3.0     Cairo_1.5-8      proto_0.3-10    
+</code></pre>
+
+<p>Total processing time was 24.67 secs.</p>
+
+<h3>Reproducibility</h3>
+
+<p>To reproduce this report, do:</p>
+
+<pre><code class="r">html &lt;- matrixStats:::benchmark(&#39;binCounts&#39;)
+</code></pre>
+
+<hr/>
+
+<p>Copyright Henrik Bengtsson. Last updated on 2015-09-20 14:45:17 (-0700 UTC). Powered by <a href="http://cran.r-project.org/package=R.rsp">RSP</a>.</p>
+
+<script>
+ var link = document.createElement('link');
+ link.rel = 'icon';
+ link.href = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAADFBMVEX9/v0AAP/9/v3//wBEQjoBAAAABHRSTlP//wD//gy7CwAAAGJJREFUOI3N0rESwCAIA9Ag///PXdoiBk0HhmbNO49DMETQCexNCSyFgdlGoO5DYOr9ThLgPosA7osIQP0sHuDOog8UI/ALa988wzdwXJRctf4s+d36YPTJ6aMd8ux3+QO4ABTtB85yDAh9AAAAAElFTkSuQmCC"
+ document.getElementsByTagName('head')[0].appendChild(link);
+</script>
+
+</body>
+
+</html>
