@@ -1,6 +1,6 @@
-0b5f1381f6ec1440750ec8198eaec2e6 *DESCRIPTION
+7635e511b5dbfac7d5922692b0e27974 *DESCRIPTION
 d0988a37136cd0d8b94609ec531db77b *NAMESPACE
-77ed1173fb39d2c700f4629b81e92310 *NEWS
+32ce768679ab366bc8bd36f556dd17e9 *NEWS
 e11dfd66d9a104fbc5598c52bd2f516d *R/999.package.R
 bc8d37bc4988831234eea6d7d6066e4a *R/allocMatrix.R
 ecb0e41cc192d08425ee0f3037e50060 *R/anyMissing.R
@@ -43,7 +43,7 @@ dc1b273d07d4d884bd320dad4143ee4d *R/weightedMean.R
 203108f1a2e61ac621e36b82125f918b *R/weightedVar.R
 16bc29fb65379cc0e66f9063d7fdb51f *R/x_OP_y.R
 c3bf2b5add1d21bb0c216e8bc99f85b1 *R/zzz.R
-736dfada12b78aa007324b1e19769d69 *build/vignette.rds
+755dfce20fcccb91f6823ec0c50a1fc2 *build/vignette.rds
 ca0c103b1be9f97f60c0623aea65f5c2 *inst/benchmarking/R/random-matrices.R
 4a38dc3c38475a36786249204cf20588 *inst/benchmarking/R/random-vectors.R
 7256378a1eb54d9d41e0d075a11b3612 *inst/benchmarking/allocMatrix.md.rsp
@@ -128,7 +128,7 @@ c10e3a67c52dce50cb92f1c598aa5941 *inst/benchmarking/t_tx_OP_y_subset.md.rsp
 bee2599dcc692be01fc03af2d3329589 *inst/benchmarking/weightedMedian_subset.md.rsp
 7b063158ba0bca2a2550bd7c4f9524c4 *inst/benchmarking/x_OP_y.md.rsp
 1e256e0db41335d3e71c14b38498faa3 *inst/benchmarking/x_OP_y_subset.md.rsp
-70c2beee115eaaaf59d86c96f9b13be9 *inst/doc/matrixStats-methods.html
+bdb2d4100860da5a4d464537d1cbea38 *inst/doc/matrixStats-methods.html
 8d8c572083a11106e8bff427c6d29349 *inst/doc/matrixStats-methods.md.rsp
 3be5b91c497cfc857af456c5458bb6e0 *man/allocMatrix.Rd
 8298f4535779a182cefd93a135f5901e *man/anyMissing.Rd
@@ -137,7 +137,7 @@ e7e0cb7ee779c80052876e588d7bcd28 *man/binMeans.Rd
 40afa2038e0cf63282fcb55ad44b2f45 *man/diff2.Rd
 553286071b44b0c10001ec59d437642a *man/indexByRow.Rd
 6d8ed27a60fe5a42d057fb86a7614de2 *man/logSumExp.Rd
-b4bd20a57fef2ff0ec6db7aafaf67328 *man/matrixStats-package.Rd
+c11946af0b752812544ef1db208b376a *man/matrixStats-package.Rd
 937f5e3ffa36565eb6f3557821948f0e *man/meanOver.Rd
 669e48a83c7256e705b7058deda57f25 *man/rowAvgsPerColSet.Rd
 c8ac4723c22ac671644c0bcf9c732b39 *man/rowCollapse.Rd
@@ -225,7 +225,7 @@ d61fe5990943d84359968910cfde4bb7 *src/templates-types.h
 78bbf931f308f8cf910cf70f646d4597 *src/templates-types_undef.h
 1fe96f23b52c292f78943b4980eb0f33 *src/types.h
 65fb3da36800752e65d11562d717e4ab *src/utils.h
-6b2ea8aa1b02e5d09f714a37fa1af94d *src/validateIndices.c
+ce42159813094915b42c46b2ae31b4e9 *src/validateIndices.c
 03505b1c819e0ea1d6a36b680ca9019c *src/validateIndices_TYPE-template.h
 7560430fd6d4172e44c9707b2860cc75 *src/weightedMean.c
 4c416712906e44769b9bd8e8f5c3878a *src/weightedMean_TYPE-template.h
