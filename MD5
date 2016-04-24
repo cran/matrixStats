@@ -1,9 +1,9 @@
-7635e511b5dbfac7d5922692b0e27974 *DESCRIPTION
+9ab8cc9eec1871b076e7d144a96073aa *DESCRIPTION
 d0988a37136cd0d8b94609ec531db77b *NAMESPACE
-32ce768679ab366bc8bd36f556dd17e9 *NEWS
+8d3d709e053701e76ba417faa505067c *NEWS
 e11dfd66d9a104fbc5598c52bd2f516d *R/999.package.R
 bc8d37bc4988831234eea6d7d6066e4a *R/allocMatrix.R
-ecb0e41cc192d08425ee0f3037e50060 *R/anyMissing.R
+6bc60995362813bebd3d4869d33d0890 *R/anyMissing.R
 93d3ad6fb517ebf2f4011fd0f21903d9 *R/benchmark.R
 abdf00292f6d18a6dc9e4447901962dd *R/binCounts.R
 db72546be61094c565ced41da6670664 *R/binMeans.R
@@ -21,7 +21,7 @@ b5653081d35b0f6326dc5748d93dd802 *R/product.R
 877ad934883fc3379eed93287f232256 *R/rowDiffs.R
 3d3f0b9e2504a11265c9583bb59741cc *R/rowIQRs.R
 ecc6e62ccee3b234e65dba17f796b04b *R/rowLogSumExps.R
-8e06abc6d0436a559360b511d66f9b9b *R/rowMads.R
+3a38a296aa1ba296a4b795f389bad3fb *R/rowMads.R
 e2679140f4a0633451720625a006cfb2 *R/rowMedians.S4.R
 912bc2e3f1dd8aa3caf124a08ec31a6e *R/rowOrderStats.R
 f5d27a6569191c9e81cf99386612583f *R/rowProds.R
@@ -29,13 +29,13 @@ fedc852d102a13caed0735ade1480665 *R/rowQuantiles.R
 92879d6b8c3b116b3debe6879befcf05 *R/rowRanges.R
 77bb162bb3b0ab79778a6a45926b3555 *R/rowRanks.R
 57574444be678eb148161e38d755d592 *R/rowSds.R
-b7388a9fcac6aa5fd584bc5bb3387b38 *R/rowTabulates.R
+3596341e361f8688c21d605bf488e83f *R/rowTabulates.R
 a19d8314d41281d140c82c40e61621a1 *R/rowVars.R
 1ee11cd765ee67bbd04e773838dee05a *R/rowWeightedMeans.R
 ed06e3f6dc54af19b1be1c2ee4535387 *R/rowWeightedMedians.R
 257b77afd5d5342bc70777ffc1d76dda *R/signTabulate.R
 6fec1e7e5af82c188495e8461c1aaaad *R/sumOver.R
-6e660880ac95281f7e54d630627afb75 *R/validateIndices.R
+cf5390f907dea38c93b050c5eeb5bb13 *R/validateIndices.R
 63be4e9df657da216c4f9d462f790f1e *R/varDiff.R
 b31060ea1d16ce3db6d33d20fbc45b7b *R/weightedMad.R
 dc1b273d07d4d884bd320dad4143ee4d *R/weightedMean.R
@@ -43,7 +43,7 @@ dc1b273d07d4d884bd320dad4143ee4d *R/weightedMean.R
 203108f1a2e61ac621e36b82125f918b *R/weightedVar.R
 16bc29fb65379cc0e66f9063d7fdb51f *R/x_OP_y.R
 c3bf2b5add1d21bb0c216e8bc99f85b1 *R/zzz.R
-755dfce20fcccb91f6823ec0c50a1fc2 *build/vignette.rds
+cf503c7165872f869f0a93bd2a28847e *build/vignette.rds
 ca0c103b1be9f97f60c0623aea65f5c2 *inst/benchmarking/R/random-matrices.R
 4a38dc3c38475a36786249204cf20588 *inst/benchmarking/R/random-vectors.R
 7256378a1eb54d9d41e0d075a11b3612 *inst/benchmarking/allocMatrix.md.rsp
@@ -128,7 +128,7 @@ c10e3a67c52dce50cb92f1c598aa5941 *inst/benchmarking/t_tx_OP_y_subset.md.rsp
 bee2599dcc692be01fc03af2d3329589 *inst/benchmarking/weightedMedian_subset.md.rsp
 7b063158ba0bca2a2550bd7c4f9524c4 *inst/benchmarking/x_OP_y.md.rsp
 1e256e0db41335d3e71c14b38498faa3 *inst/benchmarking/x_OP_y_subset.md.rsp
-bdb2d4100860da5a4d464537d1cbea38 *inst/doc/matrixStats-methods.html
+1f38344b3a57f990d0272232eac3b469 *inst/doc/matrixStats-methods.html
 8d8c572083a11106e8bff427c6d29349 *inst/doc/matrixStats-methods.md.rsp
 3be5b91c497cfc857af456c5458bb6e0 *man/allocMatrix.Rd
 8298f4535779a182cefd93a135f5901e *man/anyMissing.Rd
@@ -137,7 +137,7 @@ e7e0cb7ee779c80052876e588d7bcd28 *man/binMeans.Rd
 40afa2038e0cf63282fcb55ad44b2f45 *man/diff2.Rd
 553286071b44b0c10001ec59d437642a *man/indexByRow.Rd
 6d8ed27a60fe5a42d057fb86a7614de2 *man/logSumExp.Rd
-c11946af0b752812544ef1db208b376a *man/matrixStats-package.Rd
+da8c929d4ace42912e248b9cfd9b793d *man/matrixStats-package.Rd
 937f5e3ffa36565eb6f3557821948f0e *man/meanOver.Rd
 669e48a83c7256e705b7058deda57f25 *man/rowAvgsPerColSet.Rd
 c8ac4723c22ac671644c0bcf9c732b39 *man/rowCollapse.Rd
@@ -159,7 +159,7 @@ a9754d655430f6cef9f8f5c217129834 *man/rowWeightedMeans.Rd
 ad6d5e215e230f45dd2e60dac862214a *man/rowWeightedMedians.Rd
 26acb1953d4910b6d14b58ee2cab883a *man/signTabulate.Rd
 ca983b06e01b11343d9cf152e1dc5520 *man/sumOver.Rd
-dfee3a1058873edfd66500072044caec *man/validateIndices.Rd
+47b7656ce94b09fc7ec65d18a08fae53 *man/validateIndices.Rd
 d189daae1944168a3598590a855d2552 *man/varDiff.Rd
 9a982aeeabe24fb34750b12feb28de73 *man/weightedMad.Rd
 b0419e38aa289474a0c8952613223e9b *man/weightedMean.Rd
@@ -183,7 +183,7 @@ a456f19c1131ec00db38d9538faa47b1 *src/colCounts_TYPE-template.h
 adda98ed29ea20c19fab3b32cbe5aba6 *src/diff2_TYPE-template.h
 122818a15b1026f4617413b21a43f1a1 *src/indexByRow.c
 8a9a84e2a17cd5c7f3efb561d8160399 *src/logSumExp.c
-0a4261235336f03afe3a90fbe1b5507b *src/logSumExp_TYPE-template.h
+815a557e788542b5cb2e21affb9ce81c *src/logSumExp_TYPE-template.h
 efa7fba525b03b9112b836774c581c60 *src/macros.h
 b15539c2415122ffaaed429e03e09852 *src/meanOver.c
 a3f988aa491acc57788165eea2b45dc7 *src/meanOver_TYPE-template.h
@@ -224,7 +224,7 @@ f9642134425ed8ed448255a7d5d99e98 *src/templates-gen-matrix-vector.h
 d61fe5990943d84359968910cfde4bb7 *src/templates-types.h
 78bbf931f308f8cf910cf70f646d4597 *src/templates-types_undef.h
 1fe96f23b52c292f78943b4980eb0f33 *src/types.h
-65fb3da36800752e65d11562d717e4ab *src/utils.h
+955f37d5d36cf492863872a6bcdb845d *src/utils.h
 ce42159813094915b42c46b2ae31b4e9 *src/validateIndices.c
 03505b1c819e0ea1d6a36b680ca9019c *src/validateIndices_TYPE-template.h
 7560430fd6d4172e44c9707b2860cc75 *src/weightedMean.c
@@ -241,14 +241,14 @@ f3f5505626d59ecc6c8d498bf6885de0 *tests/anyMissing.R
 b90edee85808dbee0ef97af004352844 *tests/benchmark.R
 fd636ec43f81ad7f1ecef7bb12062450 *tests/binCounts.R
 f9a44bffc5f9ccfc8c80eb297ffa9dca *tests/binCounts_subset.R
-0ed9bb218de4455a7ba63036d18cdfb1 *tests/binMeans,binCounts.R
-1216bcd6a11a98836ddc6fb15db6fe66 *tests/binMeans,binCounts_subset.R
+fbaa73cb2c1e60a132c7a04869fec67a *tests/binMeans,binCounts.R
+d006ea144c39a1ded48b185c27a23b65 *tests/binMeans,binCounts_subset.R
 53679ebbeee7d4ef5e7217ff8076ddce *tests/count.R
 c86c27c46ded4c964c51d925ad18cc87 *tests/count_subset.R
 851e382ed2c520ccfe239a1edb720200 *tests/diff2.R
 51f01f331e0a04894a41e8dc7f93d162 *tests/diff2_subset.R
-323eff3b3c96e679600ed54cbc281bb2 *tests/indexByRow.R
-d229e4e189c7de0db2fd280c6bd4fde6 *tests/logSumExp.R
+95b6d9d8def43a4a4fb9a1c3a88fc5a9 *tests/indexByRow.R
+f04b6bf679d3558a7cdb20f76f549136 *tests/logSumExp.R
 3e38b40c6b252ead00a0c5ad938aeafd *tests/logSumExp_subset.R
 361afd9da7276beab8ed7999d92c9e32 *tests/meanOver.R
 48cd2fd7aa8ea8108c1a4dfbb3395623 *tests/meanOver_subset.R
@@ -273,7 +273,7 @@ e20a6674d9c33035c2bed8b7eb4193a2 *tests/rowDiffs.R
 38c1964ab422aed9156c26131696ff4e *tests/rowDiffs_subset.R
 42ffd346935ba2bc2e592093a4a59315 *tests/rowIQRs.R
 a868f1913f2b7b583534852116357b8c *tests/rowIQRs_subset.R
-89451022b4573db0619d7c3a98a7afdd *tests/rowLogSumExps.R
+a90921df83d1d3607d47510f07ac8d2b *tests/rowLogSumExps.R
 926d2a450d7ccc0e99a50389ca740519 *tests/rowLogSumExps_subset.R
 5c85e4d3283d8e8e1edc574b16a129f4 *tests/rowMads.R
 360e962f909b4acc1b86e231077b00e8 *tests/rowMads_subset.R
@@ -321,5 +321,5 @@ b5fc858bc7f231d614c641acbfb59dfc *tests/weightedVar.R
 b33ddd505087ae96c1d13be1764063aa *tests/weightedVar_etal_subset.R
 8a54c1e37d221d2ada391942bef3a760 *tests/x_OP_y.R
 59961b71529f2db9795dc6875fc59eee *tests/x_OP_y_subset.R
-5087a4cbb2884533520210c7bb1fe20d *tests/zzz.package-unload.R
+ae02684a77e833bf48a7a1e4b3b10dca *tests/zzz.package-unload.R
 8d8c572083a11106e8bff427c6d29349 *vignettes/matrixStats-methods.md.rsp

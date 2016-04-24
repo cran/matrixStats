@@ -1,10 +1,10 @@
 Package: matrixStats
-Version: 0.50.1
+Version: 0.50.2
 Depends: R (>= 2.12.0)
 Imports: methods
 Suggests: base64enc, ggplot2, knitr, microbenchmark, R.devices, R.rsp
 VignetteBuilder: R.rsp
-Date: 2015-12-14
+Date: 2016-04-24
 Title: Functions that Apply to Rows and Columns of Matrices (and to
         Vectors)
 Authors@R: c(
@@ -26,6 +26,6 @@ ByteCompile: TRUE
 biocViews: Infrastructure, Statistics
 URL: https://github.com/HenrikBengtsson/matrixStats
 BugReports: https://github.com/HenrikBengtsson/matrixStats/issues
-Packaged: 2015-12-15 02:56:11 UTC; hb
+Packaged: 2016-04-24 16:00:59 UTC; hb
 Repository: CRAN
-Date/Publication: 2015-12-15 09:27:16
+Date/Publication: 2016-04-24 20:48:52
