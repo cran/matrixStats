@@ -1,7 +1,7 @@
-f7d0f4d33ccafbd8389476fe2bc1d5a8 *DESCRIPTION
+570d8c0e789c83c46e6340d2b66a9380 *DESCRIPTION
 0860c5907218fd3eaaac3596f889e9fc *NAMESPACE
-4dff55117e80514f32f8ad69bd841c2c *NEWS
-cc185f382dfe6afb12319e948bea013e *R/999.package.R
+630e82492f32661e52546a29073fe458 *NEWS
+faef8740c854536e6735da72d6b600f8 *R/999.package.R
 289048c537d9ab3f0b2223f08abe92ef *R/allocMatrix.R
 3f3bfbff10973a98681c2d5334247d9e *R/anyMissing.R
 0ed10fdbab960b38d1f4b62cf744804e *R/benchmark.R
@@ -132,7 +132,7 @@ e8c65eec84796fa104ebd81eaf06baee *inst/benchmarking/varDiff.md.rsp
 fa6e9a4a08145bce053c6e4d774e81a0 *inst/benchmarking/weightedMedian_subset.md.rsp
 e68f83709396b851d7c53e36561ed6de *inst/benchmarking/x_OP_y.md.rsp
 2dd5fa9d134fc7d05ded89f7d458b1eb *inst/benchmarking/x_OP_y_subset.md.rsp
-b0a2defd1ffae92cb76ee5283fb39f09 *inst/doc/matrixStats-methods.html
+1a7bb104030322eb6df9ca2995ac272b *inst/doc/matrixStats-methods.html
 d25f82a3b8a66d1f375186fdd85e4850 *inst/doc/matrixStats-methods.md.rsp
 e40a52ef7ac5f8e61a5e474786e5b01c *man/allocMatrix.Rd
 5896d31d7eddfcbc1edda46e6e89bce4 *man/anyMissing.Rd
@@ -141,7 +141,7 @@ e40a52ef7ac5f8e61a5e474786e5b01c *man/allocMatrix.Rd
 002193bcf08da4d3d4203baa818c5fc3 *man/diff2.Rd
 d08a32a4a039b9d1e8125637b97b0eb2 *man/indexByRow.Rd
 2c3ab33c1470ea80106449d46f119ee1 *man/logSumExp.Rd
-6cf85ec4517a4ba6c89a39863ac4f19c *man/matrixStats-package.Rd
+5f293d19910b375622acdbbd9ecdecce *man/matrixStats-package.Rd
 093fc551d63f4f8b701fbd9e341c9566 *man/mean2.Rd
 400a1e00af2244a1d57c843c961f75fb *man/rowAlls.Rd
 be4c879dc4ca7ea6adced6fc62d91ef8 *man/rowAvgsPerColSet.Rd
@@ -283,7 +283,7 @@ d7014909df5dcc968e46e858a8c2686b *tests/allocMatrix.R
 508a5d07b8897d7c461cd73559a0c22f *tests/allocVector.R
 7aed50ebd9ed57830855ac15d214512c *tests/anyMissing.R
 3e3d93772c7a420c56c8691a949aab70 *tests/anyMissing_subset.R
-f653f659abac24b14d09bd5714e6d91f *tests/benchmark.R
+17e88afab7d3c5e05e4f2e85843b6c76 *tests/benchmark.R
 ec54644a7e7e2fe10fd7f8dc6a568bc7 *tests/binCounts.R
 099a8ddd1b5e46d307a624d87fc12169 *tests/binCounts_subset.R
 1944914d4dbcb32fd62921f1ef51bb1c *tests/binMeans,binCounts.R
