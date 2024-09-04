@@ -116,7 +116,7 @@ static R_INLINE void DIFF_X_MATRIX_TYPE(X_C_TYPE *x, R_xlen_t nrow,
               if (!colsHasNA || colBegin1 != NA_R_XLEN_T){
                   /*
                    * In this special case, we can eliminate
-                   * the possibility of having NA indicies
+                   * the possibility of having NA indices
                    */
                   idx = colBegin1 + ii;
                   xvalue1 = x[idx];
@@ -134,7 +134,7 @@ static R_INLINE void DIFF_X_MATRIX_TYPE(X_C_TYPE *x, R_xlen_t nrow,
               if (!colsHasNA || colBegin2 != NA_R_XLEN_T){
                   /*
                    * In this special case, we can eliminate
-                   * the possibility of having NA indicies
+                   * the possibility of having NA indices
                    */
                   idx = colBegin2 + ii;
                   xvalue2 = x[idx];
@@ -168,7 +168,7 @@ static R_INLINE void DIFF_X_MATRIX_TYPE(X_C_TYPE *x, R_xlen_t nrow,
               if (!colsHasNA || colBegin1 != NA_R_XLEN_T){
                   /*
                    * In this special case, we can eliminate
-                   * the possibility of having NA indicies
+                   * the possibility of having NA indices
                    */
                   idx = colBegin1 + ii;
                   xvalue1 = x[idx];
@@ -186,7 +186,7 @@ static R_INLINE void DIFF_X_MATRIX_TYPE(X_C_TYPE *x, R_xlen_t nrow,
             if (!colsHasNA || colBegin1 != NA_R_XLEN_T){
                 /*
                  * In this special case, we can eliminate
-                 * the possibility of having NA indicies
+                 * the possibility of having NA indices
                  */
                 idx = colBegin1 + ii + lag;
                 xvalue2 = x[idx];
@@ -229,7 +229,7 @@ void CONCAT_MACROS(rowDiffs, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t
       nrow_tmp = nrows - lag;
       ncol_tmp = ncols;
     }
-    tmp = Calloc(nrow_tmp*ncol_tmp, X_C_TYPE);
+    tmp = R_CALLOC(nrow_tmp*ncol_tmp, X_C_TYPE);
 
     /* (a) First order of differences */
     DIFF_X_MATRIX_TYPE(x, nrow, rows, nrows, rowsHasNA, cols, ncols, colsHasNA, byrow, lag, tmp, nrow_tmp, ncol_tmp);
@@ -253,7 +253,7 @@ void CONCAT_MACROS(rowDiffs, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t
     DIFF_X_MATRIX(tmp, nrow_tmp, ncol_tmp, byrow, lag, ans, nrow_ans, ncol_ans);
 
     /* Deallocate temporary work matrix */
-    Free(tmp);
+    R_FREE(tmp);
   } /* if (differences ...) */
 }
 

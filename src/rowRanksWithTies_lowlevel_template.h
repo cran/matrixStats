@@ -10,7 +10,6 @@
    template to work as intended.
 
   - METHOD_NAME: the name of the resulting function
-  - MARGIN: 'r' (rows) or 'c' (columns).
   - X_TYPE: 'i' or 'r'
   - ANS_TYPE: 'i' or 'r'
   - TIESMETHOD: 'a' (average), 'f' (first), 'l' (last), 'r' (random), '0' (min), '1' (max), 'd' (dense)
@@ -19,7 +18,8 @@
   Hector Corrada Bravo [HCB]
   Peter Langfelder [PL]
   Henrik Bengtsson [HB]
-  Brian Montgomery [BKM]
+  Brian Montgomery 
+  Jakob Peder Pettersen [JPP]
  ***********************************************************************/
 #include <Rinternals.h>
 
@@ -49,67 +49,80 @@ void SHUFFLE_INT(int *array, size_t i, size_t j); /* prototype for use with "ran
 /* Indexing formula to compute the vector index of element j of vector i.
    Should take arguments element, vector, nElements, nVectors. */
 #undef ANS_INDEX_OF
-#if MARGIN == 'r'   /* rows */
-  #define ANS_INDEX_OF(element, vector, nRows) \
-            vector + element*nRows
-#elif MARGIN == 'c'   /* columns */
-  #define ANS_INDEX_OF(element, vector, nRows) \
-            element + vector*nRows
-#else
-  #error "MARGIN can only be 'r' or 'c'"
-#endif
 
 
 void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t ncol, 
                  R_xlen_t *rows, R_xlen_t nrows, int rowsHasNA,
                  R_xlen_t *cols, R_xlen_t ncols, int colsHasNA,
-                 ANS_C_TYPE *ans) {
+                 int byrow, ANS_C_TYPE *ans) {
   ANS_C_TYPE rank;
   X_C_TYPE *values, current, tmp;
   R_xlen_t *colOffset;
-  R_xlen_t ii, jj, kk, rowIdx;
+  R_xlen_t ii, jj, kk, rowIdx, idx;
   int *I;
   int lastFinite, firstTie, aboveTie, dense_rank_adj;
   int nvalues, nVec;
+  int norows, nocols;
+  if (cols == NULL) { nocols = 1; } else { nocols = 0; }
+  if (rows == NULL) { norows = 1; } else { norows = 0; }
 
-#if MARGIN == 'r'
-  nvalues = ncols;
-  nVec = nrows;
+  if (byrow) {
+    nvalues = ncols;
+    nVec = nrows;
+  
+    /* Pre-calculate the column offsets */
+    colOffset = (R_xlen_t *) R_alloc(ncols, sizeof(R_xlen_t));
+      for (jj=0; jj < ncols; jj++) {
+        if (nocols) {
+        colOffset[jj] = jj * nrow;
+        } else {
+          if (!colsHasNA) {
+            colOffset[jj] = cols[jj] * nrow;
+          } else {
+            colOffset[jj] = R_INDEX_OP(cols[jj], *, nrow, 1, 0);
+          } 
+        }
+      }
 
-  /* Pre-calculate the column offsets */
-  colOffset = (R_xlen_t *) R_alloc(ncols, sizeof(R_xlen_t));
-  if (cols == NULL) {
-    for (jj=0; jj < ncols; jj++)
-      colOffset[jj] = R_INDEX_OP(jj, *, nrow, 0, 0);
   } else {
-    for (jj=0; jj < ncols; jj++)
-      colOffset[jj] = R_INDEX_OP(cols[jj], *, nrow, colsHasNA, 0);
-  }
-
-#elif MARGIN == 'c'
-  nvalues = nrows;
-  nVec = ncols;
-
-  /* Pre-calculate the column offsets */
-  colOffset = (R_xlen_t *) R_alloc(nrows, sizeof(R_xlen_t));
-  if (rows == NULL) {
-    for (jj=0; jj < nrows; jj++)
-      colOffset[jj] = jj;
-  } else {
-    for (jj=0; jj < nrows; jj++)
-      colOffset[jj] = rows[jj];
-  }
-#endif
+    nvalues = nrows;
+    nVec = ncols;
+  
+    /* Pre-calculate the column offsets */
+    colOffset = (R_xlen_t *) R_alloc(nrows, sizeof(R_xlen_t));
+    
+    for (jj=0; jj < nrows; jj++) {
+      if (norows) {
+        colOffset[jj] = jj;
+      } else {
+        colOffset[jj] = rows[jj];
+      }
+    }
+  } // if (byrow)
+    
+  
 
   values = (X_C_TYPE *) R_alloc(nvalues, sizeof(X_C_TYPE));
   I = (int *) R_alloc(nvalues, sizeof(int));
 
   for (ii=0; ii < nVec; ii++) {
-#if MARGIN == 'r'
-    rowIdx = ((rows == NULL) ? (ii) : rows[ii]);
-#elif MARGIN == 'c'
-    rowIdx = R_INDEX_OP(((cols == NULL) ? (ii) : cols[ii]), *, nrow, colsHasNA, 0);
-#endif
+    if (byrow) {
+      if (norows) {
+        rowIdx = ii;
+      } else {
+        rowIdx = rows[ii];
+      }
+    } else {
+      if (nocols) {
+        rowIdx = ii * nrow;
+      } else {
+        if (!colsHasNA) {
+          rowIdx = cols[ii] * nrow;
+        } else {
+          rowIdx = R_INDEX_OP(cols[ii], *, nrow, 1, 0);
+        }
+      }
+    }
     lastFinite = nvalues-1;
 
     /* Put the NA/NaN elements at the end of the vector and update
@@ -121,36 +134,39 @@ void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t n
     for (jj = 0; jj <= lastFinite; jj++) {
       /*
        * Checking for the colsHasNA when we already have to check colsHasNA || rowsHasNA
-       * is indeed useless, but for keeping the code ideomatic, we still do it
+       * is indeed useless, but for keeping the code idiomatic, we still do it
        * Hopefully, the compiler will optimize out the unnecessary instructions [JPP].
        */
-#if MARGIN == 'r'
-      tmp = R_INDEX_GET(x, R_INDEX_OP(rowIdx, +, colOffset[jj], rowsHasNA, colsHasNA), X_NA, colsHasNA || rowsHasNA);
-#elif MARGIN == 'c'
-      tmp = R_INDEX_GET(x, R_INDEX_OP(rowIdx, +, colOffset[jj], colsHasNA, rowsHasNA), X_NA, colsHasNA || rowsHasNA);
-#endif
+        if (!rowsHasNA && !colsHasNA) {
+          idx = rowIdx + colOffset[jj];
+          tmp = x[idx];
+        } else {
+          idx = R_INDEX_OP(rowIdx, +, colOffset[jj], 1, 1);
+          tmp = R_INDEX_GET(x, idx, X_NA, 1);
+        }
       
       if (X_ISNAN(tmp)) {
-        while (lastFinite > jj && X_ISNAN(R_INDEX_GET(x, R_INDEX_OP(rowIdx,+,colOffset[lastFinite],
-#if MARGIN == 'r'
-                                                                    rowsHasNA, colsHasNA
-#elif MARGIN == 'c'
-                                                                    colsHasNA, rowsHasNA
-#endif
-                                                                    ), X_NA, colsHasNA || rowsHasNA))) {
+        R_xlen_t lastFinite_idx;
+        X_C_TYPE lastFinite_val;
+        while (lastFinite > jj) {
+          if (!rowsHasNA && !colsHasNA) {
+            lastFinite_idx = rowIdx + colOffset[lastFinite];
+            lastFinite_val = x[lastFinite_idx];  
+          } else {
+            lastFinite_idx = R_INDEX_OP(rowIdx, +, colOffset[lastFinite], 1, 1);
+            lastFinite_val = R_INDEX_GET(x, lastFinite_idx, X_NA, 1);  
+          }
+          
+          if (!X_ISNAN(lastFinite_val)) {
+            break;
+          }
           I[lastFinite] = lastFinite;
           lastFinite--;
         }
 
         I[lastFinite] = jj;
         I[jj] = lastFinite;
-        values[ jj ] = R_INDEX_GET(x, R_INDEX_OP(rowIdx,+,colOffset[lastFinite],
-#if MARGIN == 'r'
-                                                 rowsHasNA, colsHasNA
-#elif MARGIN == 'c'
-                                                 colsHasNA, rowsHasNA
-#endif
-        ), X_NA, colsHasNA || rowsHasNA);
+        values[ jj ] = lastFinite_val;
         values[ lastFinite ] = tmp;
         lastFinite--;
       } else {
@@ -160,8 +176,8 @@ void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t n
     } /* for (jj ...) */
 
    // Diagnostic print-outs
-   /*
-
+   
+    /*
     Rprintf("Swapped vector:\n");
     for (jj=0; jj < nvalues; jj++)
     {
@@ -186,15 +202,29 @@ void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t n
     firstTie = 0;
     aboveTie = 1;
     dense_rank_adj = 0;
+    
     for (jj=0; jj <= lastFinite;) {
+      
       if (TIESMETHOD == 'd') {
         dense_rank_adj += (aboveTie - firstTie - 1);
         firstTie = jj - dense_rank_adj;
       } else {
         firstTie = jj;
       }
+      
       current = values[jj];
+      
+      if (X_ISNAN(current)) {
+        /*
+         * This is really a runtime check of an internal programming error. Preferentially, it should have been
+         * caught by testing. The only problem is that the test would be stuck in an infinite loop unless it is
+         * checked for at runtime. 
+         */
+        error("Internal matrixStats programming error, NaN values not handled correctly");
+      }
+      
       while ((jj <= lastFinite) && (values[jj] == current)) jj++;
+      
       if (TIESMETHOD == 'd') {
         aboveTie = jj - dense_rank_adj;
       } else {
@@ -212,25 +242,60 @@ void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t n
         // Get appropriate rank for average, min, max, or dense
         rank = RANK(firstTie, aboveTie);
       }
+      
       for (kk=firstTie; kk < aboveTie; kk++) {
-        if (TIESMETHOD == 'f' || TIESMETHOD == 'r') {
-          ans[ ANS_INDEX_OF(I[kk], ii, nrows) ] = kk + 1;
-        } else if (TIESMETHOD == 'l') {
-          ans[ ANS_INDEX_OF(I[kk], ii, nrows) ] = aboveTie - (kk - firstTie);
-        } else if (TIESMETHOD == 'd') {
-          ans[ ANS_INDEX_OF(I[kk + dense_rank_adj], ii, nrows) ] = rank;
+        if (byrow) {
+          switch (TIESMETHOD) {
+          /*
+           * Note the fallthrough
+           */
+          case 'f':
+          case 'r':
+            ans[ii + I[kk]*nrows] = kk + 1;
+            break;
+          case 'l':
+            ans[ii + I[kk]*nrows] = aboveTie - (kk - firstTie);
+            break;
+          case 'd':
+            ans[ii + I[kk + dense_rank_adj]*nrows] = rank;
+            break;
+          default:
+            ans[ii + I[kk]*nrows] = rank;
+            break;
+          }
         } else {
-          ans[ ANS_INDEX_OF(I[kk], ii, nrows) ] = rank;
+          switch (TIESMETHOD) {
+          case 'f':
+          case 'r':
+            ans[I[kk] + ii*nrows] = kk + 1;
+            break;
+          case 'l':
+            ans[I[kk] + ii*nrows] = aboveTie - (kk - firstTie);
+            break;
+          case 'd':
+            ans[I[kk + dense_rank_adj] + ii*nrows] = rank;
+            break;
+          default:
+            ans[I[kk] + ii*nrows] = rank;
+            break;
+          }
         }
       }
     }
-
+    
+    
     // At this point jj = lastFinite + 1, no need to re-initialize again.
     for (; jj < nvalues; jj++) {
-      ans[ ANS_INDEX_OF(I[jj], ii, nrows) ] = ANS_NA;
+      if (byrow) {
+        ans[ii + I[jj]*nrows] = ANS_NA;
+      } else{
+        ans[I[jj] + ii*nrows] = ANS_NA;
+      }
     }
 
-    // Rprintf("\n");
+    /*
+    Rprintf("\n");
+     */
   }
 }
 
@@ -247,7 +312,7 @@ void CONCAT_MACROS(METHOD, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t n
  2013-04-23 [HB]
  o BUG FIX: Ranks did not work for integers with NAs; now using X_ISNAN().
  2013-01-13 [HB]
- o Template cleanup.  Extened tempate to integer matrices.
+ o Template cleanup.  Extended template to integer matrices.
  o Added argument 'tiesMethod' to rowRanks().
  2012-12-14 [PL]
  o Added internal support for "min", "max" and "average" ties.  Using

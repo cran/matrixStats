@@ -1,3 +1,29 @@
+# Version 1.4.0 [2024-09-03]
+
+## Performance
+
+ * `rowSums2()` is now significantly faster for larger matrices.
+ 
+## Miscellaneous
+
+ * None of the error messages use a trailing period.
+ 
+ * Addressing changes in the C API of R-devel resulted in compiler
+   errors such as `error: implicit declaration of function 'Calloc';
+   did you mean 'calloc'? [-Wimplicit-function-declaration]`.
+
+ * Addressing changes in stricter compiler flags of R-devel resulted
+   in compiler warning `embedding a directive within macro arguments
+   has undefined behavior [-Wembedded-directive]`.
+
+## Deprecated and Defunct
+
+ * Calling `colRanks()` and `rowRanks()` without explicitly specifying
+   argument `ties.method` is deprecated since version 1.3.0. If not
+   explicitly specified, a deprecation warning is now produced every
+   25:th call not specifying the `ties.method` argument.
+   
+
 # Version 1.3.0 [2024-04-10]
 
 ## Significant Changes
@@ -1105,7 +1131,7 @@
 
 ## Deprecated and Defunct
 
- * Calling `indexByRow(X)` with a matrix `X` is deprecatated.  Instead
+ * Calling `indexByRow(X)` with a matrix `X` is deprecated.  Instead
    call it with `indexByRow(dim(X))`.
 
 

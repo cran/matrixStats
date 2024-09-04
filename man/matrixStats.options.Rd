@@ -33,7 +33,7 @@ Below are the \R options and environment variables that are used by the
  \item{\option{matrixStats.center.onUse}:}{(string)
    Action taken when argument \code{center} is specified.
    If \code{"defunct"}, an error is thrown.
-   If \code{"deprecated"}, a warning is signalled.
+   If \code{"deprecated"}, a warning is signaled.
    If \code{"ignore"}, it's silently ignored.
    (Default: \code{"ignore"})}
 }
@@ -42,7 +42,7 @@ Below are the \R options and environment variables that are used by the
  \item{\option{matrixStats.center.onScalar}:}{(string)
    Action taken when argument \code{center} is a scalar.
    If \code{"defunct"}, an error is thrown.
-   If \code{"deprecated"}, a warning is signalled.
+   If \code{"deprecated"}, a warning is signaled.
    If \code{"ignore"}, it's silently ignored.
    (Default: \code{"deprecated"})}
 }
@@ -52,7 +52,7 @@ Below are the \R options and environment variables that are used by the
    Action taken when argument \code{center} is specified with the wrong
    assumptions of the underlying formula used internally.
    If \code{"defunct"}, an error is thrown.
-   If \code{"deprecated"}, a warning is signalled.
+   If \code{"deprecated"}, a warning is signaled.
    (Default: \code{"defunct"})}
 }
 
@@ -67,7 +67,7 @@ Below are the \R options and environment variables that are used by the
    Controls whether argument \code{ties.method} for \code{colRanks()}
    and \code{rowRanks()} should be explicitly specified.
    If \code{"defunct"}, an error is produced, if not.
-   If \code{"deprecated"}, a warning is signalled.
+   If \code{"deprecated"}, a warning is signaled.
    If \code{"ignore"}, it's silently ignored.
    (Default: \code{"deprecated"} in R (>= 4.4.0), otherwise \code{"ignore"})}
 }
@@ -75,14 +75,14 @@ Below are the \R options and environment variables that are used by the
 \describe{
  \item{\option{matrixStats.ties.method.freq}:}{(numeric)
    Controls how often the above validation is checked.
-   (Default: \code{50} - every 50:th call starting with the first)}
+   (Default: \code{25} - every 25:th call starting with the first)}
 }
 
 \describe{
  \item{\option{matrixStats.useNames.NA}:}{(string)
    Action taken when argument \code{useNames} is set to \code{NA}.
    If \code{"defunct"}, an error is thrown.
-   If \code{"deprecated"}, a warning is signalled.
+   If \code{"deprecated"}, a warning is signaled.
    (Default: \code{"defunct"})}
 }
 }

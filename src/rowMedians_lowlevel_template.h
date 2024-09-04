@@ -66,7 +66,7 @@ void CONCAT_MACROS(rowMedians, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen
       colOffset = (R_xlen_t *) R_alloc(ncols, sizeof(R_xlen_t));
       if (byrow) {
           for (jj=0; jj < ncols; jj++)
-              if(!rowsHasNA && !colsHasNA){
+              if (!rowsHasNA && !colsHasNA) {
                   colOffset[jj] = cols[jj] * nrow;
               }
               else{
@@ -97,7 +97,7 @@ void CONCAT_MACROS(rowMedians, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen
             if (!rowsHasNA && nocols) {
                 /*
                  * In this special case, we can eliminate
-                 * the possibility of having NA indicies
+                 * the possibility of having NA indices
                  */
                 if (byrow) idx = rowIdx + jj*nrow;
                 else idx = rowIdx + jj;
