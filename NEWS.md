@@ -1,3 +1,12 @@
+# Version 1.4.1 [2024-09-06]
+
+## Bug Fixes
+
+ * Fix a potential `runtime error: null pointer passed as argument 1,
+   which is declared to never be null` bug introduced in v1.4.0 that
+   was detected by the UndefinedBehaviorSanitizer (UBSan) running on CRAN.
+ 
+
 # Version 1.4.0 [2024-09-03]
 
 ## Performance

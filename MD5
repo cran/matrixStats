@@ -1,6 +1,6 @@
-0d39a95b51df2afab4446bb3f6c77d75 *DESCRIPTION
+64b8d303d1717e1c34fb7c3fb1e10319 *DESCRIPTION
 0ec2aff687137e8e82740bb58f5498b4 *NAMESPACE
-5d5e3184e93af69b28afb26a964030e8 *NEWS.md
+e909f3adc7cd62bc01012075231d1fba *NEWS.md
 a9a05ff1e6b8ba40d8e544bad825864f *R/000.DEPRECATION.R
 7fb762061e116dddd8eb4750aa15bcf5 *R/999.package.R
 22692aefe0cfed876cf940f760dfe1a8 *R/allocMatrix.R
@@ -47,7 +47,7 @@ c250fd34f40c5fc816f505eeff9e4839 *R/weightedMean.R
 36d268136e18f67db93dc5649623a8da *R/x_OP_y.R
 49cee76b3abd2eb8760613977c11f10a *R/zzz.R
 25db9193383db335b7e5a536f71917b1 *build/vignette.rds
-bd4fba1e1e07ed4a9b7616fc7443c40d *inst/WORDLIST
+07cc080333e00fbbf453dfeb611bea63 *inst/WORDLIST
 ca773a01fc2df607bef2bf6ee72f01fb *inst/benchmarking/R/random-matrices.R
 68d9d75e6b36f6bd61569553be4cb133 *inst/benchmarking/R/random-vectors.R
 e00cf911d14b0c6bc13bb17b3dd62f1e *inst/benchmarking/allocMatrix.md.rsp
@@ -134,7 +134,7 @@ e8c65eec84796fa104ebd81eaf06baee *inst/benchmarking/varDiff.md.rsp
 fa6e9a4a08145bce053c6e4d774e81a0 *inst/benchmarking/weightedMedian_subset.md.rsp
 e68f83709396b851d7c53e36561ed6de *inst/benchmarking/x_OP_y.md.rsp
 2dd5fa9d134fc7d05ded89f7d458b1eb *inst/benchmarking/x_OP_y_subset.md.rsp
-afd357afc491ec03548e82a1e4857b78 *inst/doc/matrixStats-methods.html
+690d7af49fc5424c57d83aedcf8e1fa4 *inst/doc/matrixStats-methods.html
 b5d58ec253e5089b3b1ca4887eab8707 *inst/doc/matrixStats-methods.md.rsp
 c15095e33173fb3d53787d941d897b38 *man/allocMatrix.Rd
 0cc157b8e006da349166ed27ee16e923 *man/anyMissing.Rd
@@ -260,7 +260,7 @@ dff4086c0709c205a8a2fa10ef303ad9 *src/rowRanksWithTies_lowlevel.h
 3987b534aaf9e98742f2d801b4a55b83 *src/rowRanksWithTies_lowlevel_template.h
 7f0e9288ad44153b681940fbd4d3e20d *src/rowSums2.c
 209c226ca99239c059a2193017e1ef46 *src/rowSums2_lowlevel.h
-7f3ee81ed302586a026d6df392c0eb69 *src/rowSums2_lowlevel_template.h
+50ff562a197ec7677880b483a74cf033 *src/rowSums2_lowlevel_template.h
 f6e8906a531d861d74cfd7d13eaae583 *src/rowVars.c
 5efe9852f5b52191bb51817bc49d8c31 *src/rowVars_lowlevel.h
 486c30f164b82c2eaa1538c989fe3b22 *src/rowVars_lowlevel_template.h

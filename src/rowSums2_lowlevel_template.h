@@ -44,9 +44,17 @@ void CONCAT_MACROS(rowSums2, X_C_SIGNATURE)(X_C_TYPE *x, R_xlen_t nrow, R_xlen_t
     
     if (byrow) {
       rowSum = LDOUBLE_ALLOC(nrows);
-      /* Ensures that all elements of array are intialized to zero,
-       * this is VERY important */
-      memset(rowSum, 0, nrows*  sizeof(LDOUBLE));
+      /*
+       * If nrows == 0, a NULL pointer is returned.
+       * Calling memset() with a NULL pointer is apparently undefined behavior,
+       * so we must guard for it 
+       */
+      if (nrows > 0) {
+        /* Ensures that all elements of array are intialized to zero,
+         * this is VERY important */
+        memset(rowSum, 0, nrows*  sizeof(LDOUBLE));
+      }
+      
     }
     
     for (jj=0; jj < ncols; jj++) {
